@@ -19,7 +19,11 @@ const siteTitle = "SOS-PC";
       <span class="logo-text">{siteTitle}</span>
     </a>
     
-    <ul class="nav-links">
+    <button class="hamburger-menu" aria-label="Ouvrir le menu de navigation" aria-expanded="false" aria-controls="nav-links-list">
+      <span class="hamburger-icon"></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links-list">
       {navLinks.map(link => (
         <li><a href={link.href} data-navid={link.id}>{link.text}</a></li>
       ))}
@@ -32,8 +36,6 @@ const siteTitle = "SOS-PC";
 </nav>
 
 <style define:vars={{ siteTitle }}>
-  /* Using --maxNavbarHeight from Layout.astro for consistency */
-  /* Default fallback if --maxNavbarHeight is not available for some reason */
   :root {
     --navbar-internal-height: var(--maxNavbarHeight, 80px); 
   }
@@ -41,16 +43,16 @@ const siteTitle = "SOS-PC";
   nav#main-navbar {
     background-color: var(--navbar-bg-color);
     border-bottom: 1px solid var(--navbar-border-color);
-    position: fixed; /* Fixed position at the top */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Ensure navbar is above other content */
+    z-index: 1000;
     box-sizing: border-box;
     height: var(--navbar-internal-height);
-    padding: 0 1.5rem; /* Horizontal padding */
-    display: flex; /* For vertical alignment of .nav-container */
-    align-items: center; /* Vertically center .nav-container */
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
@@ -59,35 +61,33 @@ const siteTitle = "SOS-PC";
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: var(--max-content-width, 1200px); /* Max width for navbar content itself */
-    margin: 0 auto; /* Center the container */
+    max-width: var(--max-content-width, 1200px);
+    margin: 0 auto;
   }
 
   .logo-container {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: var(--text-color); /* Inherit text color */
+    color: var(--text-color);
   }
 
   #navbar-logo {
-    /* Dynamically size logo based on navbar height, with a max */
-    height: calc(var(--navbar-internal-height) - 30px); /* e.g., 80px - 30px = 50px */
-    max-height: 50px; /* Absolute maximum height for the logo */
-    width: auto; /* Maintain aspect ratio */
+    height: calc(var(--navbar-internal-height) - 30px);
+    max-height: 50px;
+    width: auto;
     cursor: pointer;
-    margin-right: 10px; /* Space between logo and text */
-    transition: transform 0.3s ease; /* For subtle hover effects if any */
+    margin-right: 10px;
+    transition: transform 0.3s ease;
   }
   
   .logo-text {
-    font-size: clamp(1.2rem, 3vw, 1.5rem); /* Responsive font size */
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     font-weight: bold;
-    color: var(--heading-color); /* Use heading color for logo text */
+    color: var(--heading-color);
     transition: color 0.3s ease;
   }
 
-  /* Logo bounce animation */
   #navbar-logo.bounce {
     animation: logoBounce 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   }
@@ -95,31 +95,32 @@ const siteTitle = "SOS-PC";
   @keyframes logoBounce {
     0%, 100% { transform: scale(1) translateY(0); }
     10% { transform: scale(1.1, 0.9) translateY(0); }
-    30% { transform: scale(0.9, 1.1) translateY(-10px); } /* Bounce up */
+    30% { transform: scale(0.9, 1.1) translateY(-10px); }
     50% { transform: scale(1.05, 0.95) translateY(0); }
-    70% { transform: scale(1) translateY(-5px); } /* Smaller bounce */
+    70% { transform: scale(1) translateY(-5px); }
     90% { transform: scale(1) translateY(0); }
   }
 
   .nav-links {
     list-style: none;
     display: flex;
-    gap: clamp(1rem, 2.5vw, 1.75rem); /* Responsive gap */
+    gap: clamp(1rem, 2.5vw, 1.75rem);
     margin: 0;
     padding: 0;
+    align-items: center; /* Align items for desktop */
   }
 
   .nav-links a {
     text-decoration: none;
     color: var(--navbar-link-color);
     font-weight: 500;
-    font-size: clamp(0.9rem, 2vw, 1rem); /* Responsive font size */
-    padding: 0.5rem 0.25rem; /* Padding for touch targets and underline space */
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    padding: 0.5rem 0.25rem;
     position: relative;
     transition: color 0.3s ease;
   }
 
-  .nav-links a::after { /* Underline effect */
+  .nav-links a::after {
     content: '';
     position: absolute;
     width: 0;
@@ -132,14 +133,13 @@ const siteTitle = "SOS-PC";
   }
 
   .nav-links a:hover,
-  .nav-links a.active { /* Style for hover and active links */
-    color: var(--accent); /* Use accent color from global styles */
+  .nav-links a.active {
+    color: var(--accent);
   }
   html.dark .nav-links a:hover,
   html.dark .nav-links a.active {
-    color: rgb(var(--accent-light)); /* Lighter accent for dark mode */
+    color: rgb(var(--accent-light));
   }
-
 
   .nav-links a:hover::after,
   .nav-links a.active::after {
@@ -147,66 +147,181 @@ const siteTitle = "SOS-PC";
   }
   
   .theme-switcher-container {
-    /* Minimal styling, relies on ThemeSwitcher's own styles */
     display: flex;
     align-items: center;
   }
 
-  /* Responsive adjustments for navbar */
+  .hamburger-menu {
+    display: none; /* Hidden by default, shown in media query */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001; /* Above nav-links when they are positioned absolutely */
+  }
+
+  .hamburger-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--navbar-link-color);
+    position: relative;
+    transition: background-color 0.3s ease;
+  }
+
+  .hamburger-icon::before,
+  .hamburger-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: var(--navbar-link-color);
+    left: 0;
+    transition: transform 0.3s ease, top 0.3s ease, bottom 0.3s ease, background-color 0.3s ease;
+  }
+
+  .hamburger-icon::before {
+    top: -7px;
+  }
+
+  .hamburger-icon::after {
+    bottom: -7px;
+  }
+
+  /* Hamburger active state (X icon) */
+  .hamburger-menu.active .hamburger-icon {
+    background-color: transparent; /* Middle bar disappears */
+  }
+  .hamburger-menu.active .hamburger-icon::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+  .hamburger-menu.active .hamburger-icon::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+  }
+  html.dark .hamburger-icon,
+  html.dark .hamburger-icon::before,
+  html.dark .hamburger-icon::after {
+    background-color: var(--navbar-link-color); /* Ensure it uses the dark mode link color */
+  }
+
+
   @media (max-width: 768px) {
     nav#main-navbar {
-      padding: 0 1rem; /* Reduce padding on smaller screens */
-    }
-    .nav-links {
-      /* Example: Hide links and show a burger menu icon instead */
-      /* For now, just reduce gap or let them wrap if too many */
-      gap: clamp(0.5rem, 2vw, 1rem);
+      padding: 0 1rem;
     }
     .logo-text {
-      display: none; /* Hide logo text on very small screens to save space */
+      /* Optionally hide logo text on smaller screens if space is an issue */
+      /* display: none; */
     }
     #navbar-logo {
-       height: calc(var(--navbar-internal-height) - 36px); /* e.g. 80px - 36px = 44px */
-       max-height: 40px; /* Max logo height on small screens */
+       height: calc(var(--navbar-internal-height) - 36px);
+       max-height: 40px;
+    }
+
+    .hamburger-menu {
+      display: block; /* Show hamburger */
+      order: 3; /* Place hamburger after nav links container (which will be hidden) and theme switcher */
+    }
+    
+    .theme-switcher-container {
+      order: 2; /* Theme switcher before hamburger */
+      margin-left: auto; /* Push theme switcher and hamburger to the right */
+    }
+
+    .nav-links {
+      position: absolute;
+      top: var(--navbar-internal-height); /* Position below navbar */
+      left: 0;
+      width: 100%;
+      background-color: var(--navbar-bg-color);
+      border-top: 1px solid var(--navbar-border-color);
+      flex-direction: column; /* Stack links vertically */
+      align-items: center; /* Center links */
+      padding: 1rem 0;
+      gap: 1rem;
+      max-height: 0; /* Initially hidden */
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.4s ease; /* Smooth transition */
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.nav-active {
+      max-height: 500px; /* Arbitrary large enough value to show all links */
+      padding: 1rem 0;
+    }
+
+    .nav-links a {
+      font-size: 1.1rem; /* Larger font for mobile menu */
+      padding: 0.75rem 1rem;
+      width: 100%;
+      text-align: center;
+    }
+    .nav-links a::after { /* Underline effect for mobile */
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0.5rem; /* Adjust position for centered text */
     }
   }
+
   @media (max-width: 480px) {
-    .nav-links {
-        gap: 0.5rem; /* Further reduce gap */
+    .logo-text {
+      display: none; /* Hide logo text on very small screens */
     }
     .nav-links a {
-        font-size: 0.85rem;
-        padding: 0.5rem 0.1rem;
+        font-size: 1rem;
     }
   }
 </style>
 
 <script>
-  // astro:page-load ensures this runs on initial load and subsequent page navigations
   document.addEventListener('astro:page-load', () => {
     const logoElement = document.getElementById('navbar-logo');
-    
+    const hamburgerButton = document.querySelector('.hamburger-menu');
+    const navLinksList = document.getElementById('nav-links-list');
+
+    // Logo bounce animation
     if (logoElement) {
       logoElement.addEventListener('click', (event) => {
-        // The logo is inside an <a> tag, so clicking it will navigate.
-        // If you want to prevent navigation and only animate, use event.preventDefault().
-        // For now, let's assume navigation is desired.
-
-        // Avoid re-triggering if already bouncing, or remove and re-add for restart
-        if (logoElement.classList.contains('bounce')) {
-          // Option 1: Prevent re-triggering during animation
-          return; 
-          // Option 2: Restart animation (can be janky if clicked too fast)
-          // logoElement.classList.remove('bounce');
-          // void logoElement.offsetWidth; // Force reflow to restart animation
-        }
-
-        logoElement.classList.add('bounce');
+        // If the logo is part of an <a> tag that navigates, and you want to ensure
+        // the animation plays before navigation, you might need to preventDefault,
+        // play animation, then navigate. For now, it animates alongside navigation.
         
-        // Remove the class after animation completes to allow re-triggering
-        logoElement.addEventListener('animationend', () => {
-          logoElement.classList.remove('bounce');
-        }, { once: true }); // Listener removed after first trigger
+        // Restart animation by removing and re-adding the class
+        logoElement.classList.remove('bounce');
+        // void logoElement.offsetWidth; // Force reflow - sometimes needed
+        requestAnimationFrame(() => { // Use rAF for smoother restart
+            requestAnimationFrame(() => {
+                 logoElement.classList.add('bounce');
+            });
+        });
+      });
+
+      // Remove the class after animation completes to allow re-triggering
+      // This listener should be added once, not inside the click handler
+      logoElement.addEventListener('animationend', () => {
+        logoElement.classList.remove('bounce');
+      });
+    }
+
+    // Hamburger menu toggle
+    if (hamburgerButton && navLinksList) {
+      hamburgerButton.addEventListener('click', () => {
+        const isExpanded = navLinksList.classList.toggle('nav-active');
+        hamburgerButton.classList.toggle('active');
+        hamburgerButton.setAttribute('aria-expanded', isExpanded.toString());
+        
+        // Optional: Close menu when a link is clicked (for SPA-like behavior or same-page links)
+        if (isExpanded) {
+          navLinksList.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              navLinksList.classList.remove('nav-active');
+              hamburgerButton.classList.remove('active');
+              hamburgerButton.setAttribute('aria-expanded', 'false');
+            }, { once: true }); // Remove listener after one click
+          });
+        }
       });
     }
 
@@ -217,8 +332,14 @@ const siteTitle = "SOS-PC";
       
       navLinkElements.forEach(link => {
         const linkHref = link.getAttribute('href');
+        // Normalize paths for comparison (e.g. remove trailing slashes if necessary)
+        const normalizedCurrentPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
+        const normalizedLinkHref = linkHref.endsWith('/') && linkHref.length > 1 ? linkHref.slice(0, -1) : linkHref;
+
         // Check for exact match or root path match for home
-        if (linkHref === currentPath || (linkHref === "/" && (currentPath === "/index.html" || currentPath === "/"))) {
+        // Also handle cases where index.html might be part of the path
+        if (normalizedLinkHref === normalizedCurrentPath || 
+            (normalizedLinkHref === "/" && (normalizedCurrentPath === "/index.html" || normalizedCurrentPath === ""))) {
           link.classList.add('active');
         } else {
           link.classList.remove('active');
@@ -226,9 +347,10 @@ const siteTitle = "SOS-PC";
       });
     }
     
-    updateActiveNavLink(); // Call on page load
+    updateActiveNavLink();
 
-    // Optional: Listen for hash changes if you have same-page anchor links
     window.addEventListener('hashchange', updateActiveNavLink);
+    // astro:page-load handles full page navigations, hashchange for in-page.
+    // No need for popstate if astro:page-load covers it.
   });
 </script>
