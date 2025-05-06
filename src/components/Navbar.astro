@@ -106,8 +106,7 @@ const siteTitle = "SOS-PC";
     display: flex;
     gap: clamp(1rem, 2.5vw, 1.75rem);
     margin: 0;
-    /* padding: 0; Removed from here for desktop, handled by media query for mobile */
-    align-items: center; /* Align items for desktop */
+    align-items: center; 
   }
 
   .nav-links a {
@@ -152,12 +151,12 @@ const siteTitle = "SOS-PC";
   }
 
   .hamburger-menu {
-    display: none; /* Hidden by default, shown in media query */
+    display: none; 
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
-    z-index: 1001; /* Above nav-links when they are positioned absolutely */
+    z-index: 1001; 
   }
 
   .hamburger-icon {
@@ -188,9 +187,8 @@ const siteTitle = "SOS-PC";
     bottom: -7px;
   }
 
-  /* Hamburger active state (X icon) */
   .hamburger-menu.active .hamburger-icon {
-    background-color: transparent; /* Middle bar disappears */
+    background-color: transparent; 
   }
   .hamburger-menu.active .hamburger-icon::before {
     top: 0;
@@ -203,7 +201,7 @@ const siteTitle = "SOS-PC";
   html.dark .hamburger-icon,
   html.dark .hamburger-icon::before,
   html.dark .hamburger-icon::after {
-    background-color: var(--navbar-link-color); /* Ensure it uses the dark mode link color */
+    background-color: var(--navbar-link-color); 
   }
 
 
@@ -211,17 +209,13 @@ const siteTitle = "SOS-PC";
     nav#main-navbar {
       padding: 0 1rem;
     }
-    .logo-text {
-      /* Optionally hide logo text on smaller screens if space is an issue */
-      /* display: none; */
-    }
     #navbar-logo {
        height: calc(var(--navbar-internal-height) - 36px);
        max-height: 40px;
     }
 
     .hamburger-menu {
-      display: block; /* Show hamburger */
+      display: block; 
       order: 3; 
     }
     
@@ -230,7 +224,7 @@ const siteTitle = "SOS-PC";
       margin-left: auto; 
     }
 
-    .nav-links { /* Mobile menu styles */
+    .nav-links { 
       position: absolute;
       top: var(--navbar-internal-height); 
       left: 0;
@@ -239,12 +233,12 @@ const siteTitle = "SOS-PC";
       border-top: 1px solid var(--navbar-border-color);
       flex-direction: column; 
       align-items: center; 
-      gap: 0.5rem; /* Reduced gap for tighter packing if needed */
+      gap: 0.5rem;
       
-      max-height: 0; /* Initially hidden */
+      max-height: 0; 
       overflow: hidden;
-      padding-top: 0; /* Explicitly 0 when closed */
-      padding-bottom: 0; /* Explicitly 0 when closed */
+      padding-top: 0; 
+      padding-bottom: 0; 
       
       transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                   padding-top 0.4s ease, 
@@ -253,9 +247,9 @@ const siteTitle = "SOS-PC";
     }
 
     .nav-links.nav-active {
-      max-height: 500px; /* Show all links */
-      padding-top: 1rem; /* Padding when open */
-      padding-bottom: 1rem; /* Padding when open */
+      max-height: 500px; 
+      padding-top: 1rem; 
+      padding-bottom: 1rem; 
     }
 
     .nav-links a {
@@ -283,12 +277,19 @@ const siteTitle = "SOS-PC";
 
 <script>
   document.addEventListener('astro:page-load', () => {
+    console.log('astro:page-load event fired. Initializing navbar script.'); // New log
+
     const logoElement = document.getElementById('navbar-logo');
     const hamburgerButton = document.querySelector('.hamburger-menu');
     const navLinksList = document.getElementById('nav-links-list');
 
+    // Log selected elements
+    console.log('Selected hamburgerButton:', hamburgerButton); // New log
+    console.log('Selected navLinksList:', navLinksList); // New log
+
     // Logo bounce animation
     if (logoElement) {
+      console.log('Logo element found. Attaching click listener.'); // New log
       logoElement.addEventListener('click', () => {
         logoElement.classList.remove('bounce');
         void logoElement.offsetWidth; 
@@ -297,20 +298,31 @@ const siteTitle = "SOS-PC";
       logoElement.addEventListener('animationend', () => {
         logoElement.classList.remove('bounce');
       });
+    } else {
+      console.error('Logo element #navbar-logo not found!'); // New log
     }
 
     // Hamburger menu toggle
     if (hamburgerButton && navLinksList) {
+      console.log('Hamburger button and nav links list found. Attaching click listener to hamburger.'); // New log
       hamburgerButton.addEventListener('click', () => {
-        console.log('Hamburger clicked!'); // DEBUGGING LINE
+        console.log('Hamburger clicked!'); // Existing log - VERY IMPORTANT
+        
         const isExpanded = navLinksList.classList.toggle('nav-active');
+        console.log('navLinksList class "nav-active" toggled. Is now expanded:', isExpanded); // New log
+        
         hamburgerButton.classList.toggle('active');
+        console.log('hamburgerButton class "active" toggled.'); // New log
+        
         hamburgerButton.setAttribute('aria-expanded', String(isExpanded));
+        console.log('hamburgerButton aria-expanded set to:', String(isExpanded)); // New log
         
         if (isExpanded) {
+          console.log('Menu is expanded. Attaching click listeners to nav links to close menu.'); // New log
           const links = navLinksList.querySelectorAll('a');
           links.forEach(link => {
             const closeMenuOnLinkClick = () => {
+              console.log('Nav link clicked, closing menu.'); // New log
               navLinksList.classList.remove('nav-active');
               hamburgerButton.classList.remove('active');
               hamburgerButton.setAttribute('aria-expanded', 'false');
@@ -319,6 +331,13 @@ const siteTitle = "SOS-PC";
           });
         }
       });
+    } else {
+      if (!hamburgerButton) {
+        console.error('Hamburger button .hamburger-menu not found!'); // New log
+      }
+      if (!navLinksList) {
+        console.error('Nav links list #nav-links-list not found!'); // New log
+      }
     }
 
     // Active navigation link highlighting
@@ -340,7 +359,12 @@ const siteTitle = "SOS-PC";
       });
     }
     
+    console.log('Calling updateActiveNavLink initially.'); // New log
     updateActiveNavLink();
-    window.addEventListener('hashchange', updateActiveNavLink);
+    window.addEventListener('hashchange', () => {
+      console.log('hashchange event detected. Calling updateActiveNavLink.'); // New log
+      updateActiveNavLink();
+    });
+    console.log('Navbar script initialization complete.'); // New log
   });
 </script>
