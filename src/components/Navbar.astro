@@ -9,7 +9,7 @@ const siteTitle = "SOS-PC";
 <nav class="navbar">
   <div class="navbar-container">
     <a href="/" class="navbar-logo">
-      <img src={logoPath} alt="SOS-PC Company Logo" />
+      <img id="navbar-logo-image" src={logoPath} alt="SOS-PC Company Logo" />
       <span>{siteTitle}</span>
     </a>
 
@@ -91,6 +91,44 @@ const siteTitle = "SOS-PC";
   } else {
     console.error('Navbar menu elements not found. Mobile menu script not fully initialized.');
   }
+
+  // Logo bounce animation
+  const logoImage = document.getElementById('navbar-logo-image');
+  if (logoImage) {
+    logoImage.addEventListener('click', (event) => {
+      // Prevent navigation if the logo itself is clicked,
+      // but allow if the link wrapper is clicked.
+      // This is a simple way, for more complex scenarios, check event.target.
+      event.preventDefault(); 
+      event.stopPropagation(); // Stop event from bubbling to the <a> tag if needed
+
+      logoImage.classList.add('bounce-animation');
+      
+      // Remove the class after the animation completes
+      logoImage.addEventListener('animationend', () => {
+        logoImage.classList.remove('bounce-animation');
+      }, { once: true }); // Ensure the event listener is removed after firing once
+    });
+
+    // Optional: Allow click on the parent <a> to also trigger animation
+    // and still navigate.
+    const logoLink = logoImage.closest('.navbar-logo');
+    if (logoLink) {
+      logoLink.addEventListener('click', (event) => {
+        // Check if the click was directly on the image, if so, it's handled already
+        if (event.target !== logoImage) {
+          logoImage.classList.add('bounce-animation');
+          logoImage.addEventListener('animationend', () => {
+            logoImage.classList.remove('bounce-animation');
+          }, { once: true });
+        }
+        // Do not preventDefault here to allow navigation
+      });
+    }
+
+  } else {
+    console.error('Navbar logo image not found for animation.');
+  }
 </script>
 
 <style>
@@ -128,6 +166,7 @@ const siteTitle = "SOS-PC";
     font-size: 1.2rem; /* Site title font size */
     flex-shrink: 0;
     transition: color 0.3s ease;
+    cursor: pointer; /* Indicate it's clickable */
   }
 
   .navbar-logo img {
@@ -136,6 +175,27 @@ const siteTitle = "SOS-PC";
     width: auto;     /* Maintain aspect ratio */
     object-fit: contain; /* Ensures the image scales within dimensions without distortion */
   }
+
+  /* Bounce Animation */
+  .navbar-logo img.bounce-animation {
+    animation: logo-bounce 0.5s ease-in-out;
+  }
+
+  @keyframes logo-bounce {
+    0%, 100% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(0.95);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    75% {
+      transform: scale(0.98);
+    }
+  }
+
 
   .navbar-menu-toggle {
     display: none; 
