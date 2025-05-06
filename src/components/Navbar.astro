@@ -106,7 +106,7 @@ const siteTitle = "SOS-PC";
     display: flex;
     gap: clamp(1rem, 2.5vw, 1.75rem);
     margin: 0;
-    padding: 0;
+    /* padding: 0; Removed from here for desktop, handled by media query for mobile */
     align-items: center; /* Align items for desktop */
   }
 
@@ -222,52 +222,58 @@ const siteTitle = "SOS-PC";
 
     .hamburger-menu {
       display: block; /* Show hamburger */
-      order: 3; /* Place hamburger after nav links container (which will be hidden) and theme switcher */
+      order: 3; 
     }
     
     .theme-switcher-container {
-      order: 2; /* Theme switcher before hamburger */
-      margin-left: auto; /* Push theme switcher and hamburger to the right */
+      order: 2; 
+      margin-left: auto; 
     }
 
-    .nav-links {
+    .nav-links { /* Mobile menu styles */
       position: absolute;
-      top: var(--navbar-internal-height); /* Position below navbar */
+      top: var(--navbar-internal-height); 
       left: 0;
       width: 100%;
       background-color: var(--navbar-bg-color);
       border-top: 1px solid var(--navbar-border-color);
-      flex-direction: column; /* Stack links vertically */
-      align-items: center; /* Center links */
-      padding: 1rem 0;
-      gap: 1rem;
+      flex-direction: column; 
+      align-items: center; 
+      gap: 0.5rem; /* Reduced gap for tighter packing if needed */
+      
       max-height: 0; /* Initially hidden */
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.4s ease; /* Smooth transition */
+      padding-top: 0; /* Explicitly 0 when closed */
+      padding-bottom: 0; /* Explicitly 0 when closed */
+      
+      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  padding-top 0.4s ease, 
+                  padding-bottom 0.4s ease;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .nav-links.nav-active {
-      max-height: 500px; /* Arbitrary large enough value to show all links */
-      padding: 1rem 0;
+      max-height: 500px; /* Show all links */
+      padding-top: 1rem; /* Padding when open */
+      padding-bottom: 1rem; /* Padding when open */
     }
 
     .nav-links a {
-      font-size: 1.1rem; /* Larger font for mobile menu */
+      font-size: 1.1rem; 
       padding: 0.75rem 1rem;
       width: 100%;
       text-align: center;
     }
-    .nav-links a::after { /* Underline effect for mobile */
+    .nav-links a::after { 
       left: 50%;
       transform: translateX(-50%);
-      bottom: 0.5rem; /* Adjust position for centered text */
+      bottom: 0.5rem; 
     }
   }
 
   @media (max-width: 480px) {
     .logo-text {
-      display: none; /* Hide logo text on very small screens */
+      display: none; 
     }
     .nav-links a {
         font-size: 1rem;
@@ -283,23 +289,11 @@ const siteTitle = "SOS-PC";
 
     // Logo bounce animation
     if (logoElement) {
-      logoElement.addEventListener('click', (event) => {
-        // If the logo is part of an <a> tag that navigates, and you want to ensure
-        // the animation plays before navigation, you might need to preventDefault,
-        // play animation, then navigate. For now, it animates alongside navigation.
-        
-        // Restart animation by removing and re-adding the class
+      logoElement.addEventListener('click', () => {
         logoElement.classList.remove('bounce');
-        // void logoElement.offsetWidth; // Force reflow - sometimes needed
-        requestAnimationFrame(() => { // Use rAF for smoother restart
-            requestAnimationFrame(() => {
-                 logoElement.classList.add('bounce');
-            });
-        });
+        void logoElement.offsetWidth; 
+        logoElement.classList.add('bounce');
       });
-
-      // Remove the class after animation completes to allow re-triggering
-      // This listener should be added once, not inside the click handler
       logoElement.addEventListener('animationend', () => {
         logoElement.classList.remove('bounce');
       });
@@ -308,18 +302,20 @@ const siteTitle = "SOS-PC";
     // Hamburger menu toggle
     if (hamburgerButton && navLinksList) {
       hamburgerButton.addEventListener('click', () => {
+        console.log('Hamburger clicked!'); // DEBUGGING LINE
         const isExpanded = navLinksList.classList.toggle('nav-active');
         hamburgerButton.classList.toggle('active');
-        hamburgerButton.setAttribute('aria-expanded', isExpanded.toString());
+        hamburgerButton.setAttribute('aria-expanded', String(isExpanded));
         
-        // Optional: Close menu when a link is clicked (for SPA-like behavior or same-page links)
         if (isExpanded) {
-          navLinksList.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
+          const links = navLinksList.querySelectorAll('a');
+          links.forEach(link => {
+            const closeMenuOnLinkClick = () => {
               navLinksList.classList.remove('nav-active');
               hamburgerButton.classList.remove('active');
               hamburgerButton.setAttribute('aria-expanded', 'false');
-            }, { once: true }); // Remove listener after one click
+            };
+            link.addEventListener('click', closeMenuOnLinkClick, { once: true });
           });
         }
       });
@@ -332,12 +328,9 @@ const siteTitle = "SOS-PC";
       
       navLinkElements.forEach(link => {
         const linkHref = link.getAttribute('href');
-        // Normalize paths for comparison (e.g. remove trailing slashes if necessary)
         const normalizedCurrentPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
         const normalizedLinkHref = linkHref.endsWith('/') && linkHref.length > 1 ? linkHref.slice(0, -1) : linkHref;
 
-        // Check for exact match or root path match for home
-        // Also handle cases where index.html might be part of the path
         if (normalizedLinkHref === normalizedCurrentPath || 
             (normalizedLinkHref === "/" && (normalizedCurrentPath === "/index.html" || normalizedCurrentPath === ""))) {
           link.classList.add('active');
@@ -348,9 +341,6 @@ const siteTitle = "SOS-PC";
     }
     
     updateActiveNavLink();
-
     window.addEventListener('hashchange', updateActiveNavLink);
-    // astro:page-load handles full page navigations, hashchange for in-page.
-    // No need for popstate if astro:page-load covers it.
   });
 </script>
