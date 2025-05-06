@@ -9,7 +9,7 @@ const siteTitle = "SOS-PC";
 <nav class="navbar">
   <div class="navbar-container">
     <a href="/" class="navbar-logo">
-      <img src={logoPath} alt="SOS-PC Company Logo" width="40" height="40" /> {/* Increased size */}
+      <img src={logoPath} alt="SOS-PC Company Logo" /> {/* Removed width and height attributes */}
       <span>{siteTitle}</span>
     </a>
 
@@ -101,7 +101,7 @@ const siteTitle = "SOS-PC";
     width: 100%;
     background-color: var(--navbar-bg-color, rgba(35, 38, 45, 0.9));
     backdrop-filter: blur(5px);
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.5rem; /* This padding contributes to the navbar's total height */
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid var(--navbar-border-color, #444);
@@ -125,24 +125,25 @@ const siteTitle = "SOS-PC";
     color: var(--text-color, white);
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.2rem; /* Site title font size */
     flex-shrink: 0;
     transition: color 0.3s ease;
   }
 
   .navbar-logo img {
     display: block;
-    object-fit: contain; /* Added for better scaling if aspect ratio isn't square */
+    height: 4.5rem; /* Target height for the logo (e.g., ~72px if 1rem=16px) */
+    width: auto;     /* Maintain aspect ratio */
+    object-fit: contain; /* Ensures the image scales within dimensions without distortion */
   }
 
   .navbar-menu-toggle {
-    display: none; /* Initially hidden; JS will manage visibility to 'flex' or 'none' */
+    display: none; 
     background: none;
     border: none;
     color: var(--text-color);
     cursor: pointer;
     padding: 0.5rem;
-    /* align-items, justify-content, order are set in media query for when it's visible */
   }
 
   .navbar-menu-toggle svg {
@@ -176,8 +177,6 @@ const siteTitle = "SOS-PC";
 
   @media (max-width: 768px) {
     .navbar-menu-toggle {
-      /* display: flex; <-- This is now controlled by JavaScript */
-      /* Properties for when JS makes it visible on small screens */
       align-items: center; 
       justify-content: center;
       order: 1; 
