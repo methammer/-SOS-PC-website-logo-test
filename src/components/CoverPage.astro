@@ -3,7 +3,7 @@ const coverPageId = "sos-pc-cover-page";
 ---
 <div id={coverPageId} class="cover-page" aria-labelledby="cover-heading" role="dialog" aria-modal="true">
   <div class="cover-content">
-    <img src="/logo.png" alt="SOS-PC Company Logo" class="logo" width="80" height="80" />
+    <img src="/logo.png" alt="SOS-PC Company Logo" class="logo" />
     <h1 id="cover-heading" class="brand-name">SOS-PC</h1>
     <p class="tagline">Unlocking Your Tech Potential</p>
     <div class="interaction-cue" role="button" tabindex="0" aria-label="Swipe up, scroll, or press Enter to explore">
@@ -58,9 +58,11 @@ const coverPageId = "sos-pc-cover-page";
   }
 
   .logo {
-    margin-bottom: 1rem;
-    /* color: var(--accent-light, #e0e0e0); Removed as it's for SVG fill, not img */
-    /* Ensure the image scales well if its aspect ratio is different from 1:1 */
+    width: 20vw; /* Adjust this percentage as needed */
+    max-width: 150px; /* Optional: set a max size for very large screens */
+    min-width: 70px; /* Optional: set a min size for very small screens */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 1.5rem; /* Increased margin a bit */
     object-fit: contain; 
   }
 

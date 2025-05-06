@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="fr" data-astro-cid-sckkx6r4 style="--maxNavbarHeight: 120px;--maxNavbarHeight: 120px;"> <head><meta charset="UTF-8"><meta name="description" content="SOS-PC - Solutions informatiques et web"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/png" href="/logo.png"><meta name="generator" content="Astro v4.16.18"><title>Accueil | SOS-PC</title><meta property="og:image" content="/logo.png"><script>
+			const theme = (() => {
+				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+					return localStorage.getItem('theme');
+				}
+				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+					return 'dark';
+				}
+				return 'light';
+			})();
+
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark'); // Ensure light is default if no class
+			}
+		</script><link rel="stylesheet" href="/_astro/index.c2j2CBFu.css"><script type="module" src="/_astro/hoisted.DfN_jpRp.js"></script></head> <body data-astro-cid-sckkx6r4 style="--maxNavbarHeight: 120px;--maxNavbarHeight: 120px;"> <div id="sos-pc-cover-page" class="cover-page" aria-labelledby="cover-heading" role="dialog" aria-modal="true" data-astro-cid-qjcbpro7> <div class="cover-content" data-astro-cid-qjcbpro7> <img src="/logo.png" alt="SOS-PC Company Logo" class="logo" data-astro-cid-qjcbpro7> <h1 id="cover-heading" class="brand-name" data-astro-cid-qjcbpro7>SOS-PC</h1> <p class="tagline" data-astro-cid-qjcbpro7>Unlocking Your Tech Potential</p> <div class="interaction-cue" role="button" tabindex="0" aria-label="Swipe up, scroll, or press Enter to explore" data-astro-cid-qjcbpro7> <span class="cue-text" data-astro-cid-qjcbpro7>Swipe up or scroll to explore</span> <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32" aria-hidden="true" data-astro-cid-qjcbpro7> <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" transform="rotate(-90 12 12)" data-astro-cid-qjcbpro7></path> </svg> </div> </div> </div>  <script>(function(){const coverPageId = "sos-pc-cover-page";
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const coverPage = document.getElementById(coverPageId);
+    if (!coverPage) return;
+
+    const interactionCue = coverPage.querySelector('.interaction-cue');
+    const dismissedKey = 'sospc_cover_dismissed_session_v1';
+    let isDismissed = false;
+    
+    let isInteracting = false; // True during mouse/touch drag
+    let startY_interaction = 0; // Start Y for mouse/touch drag
+    let initialTranslateYOnDragStart = 0; // Cover's Y pos when drag started
+
+    let currentAppliedTranslateY = 0; // Master Y position of the cover
+    let scrollEndTimer = null;
+    const SCROLL_SENSITIVITY = 1; // Adjust for desired scroll speed
+    const DISMISS_THRESHOLD_PERCENT = 0.6; // 60% of cover height
+
+    const eventHandlers = {
+      scroll: null,
+      keyDown: null,
+      clickCue: null,
+      // Bound versions for add/removeEventListener
+      boundHandleInteractionStart: null,
+      boundHandleInteractionMove: null,
+      boundHandleInteractionEnd: null,
+    };
+    
+    function applyTransform(translateY) {
+      // Clamp translateY
+      const minTranslateY = -coverPage.offsetHeight;
+      const maxTranslateY = 0;
+      translateY = Math.max(minTranslateY, Math.min(maxTranslateY, translateY));
+      
+      coverPage.style.transform = `translateY(${translateY}px)`;
+      currentAppliedTranslateY = translateY;
+    }
+
+    function dismissCover() {
+      if (isDismissed) return;
+      isDismissed = true;
+      clearTimeout(scrollEndTimer);
+
+      // Clean up interaction listeners if any were active
+      if (isInteracting) {
+        document.removeEventListener('mousemove', eventHandlers.boundHandleInteractionMove);
+        document.removeEventListener('mouseup', eventHandlers.boundHandleInteractionEnd);
+        coverPage.removeEventListener('touchmove', eventHandlers.boundHandleInteractionMove);
+        coverPage.removeEventListener('touchend', eventHandlers.boundHandleInteractionEnd);
+        coverPage.removeEventListener('touchcancel', eventHandlers.boundHandleInteractionEnd);
+        isInteracting = false;
+      }
+      
+      coverPage.style.transition = ''; // Ensure CSS transitions are active for the dismissal animation
+      coverPage.classList.add('dismissed');
+      
+      try {
+        sessionStorage.setItem(dismissedKey, 'true');
+      } catch (e) {
+        console.warn('Session storage is not available or disabled.');
+      }
+
+      const mainContent = document.querySelector('main');
+      if (mainContent) {
+        mainContent.focus({ preventScroll: true });
+      }
+      
+      // Remove general listeners
+      document.removeEventListener('wheel', eventHandlers.scroll);
+      document.removeEventListener('keydown', eventHandlers.keyDown);
+      coverPage.removeEventListener('touchstart', eventHandlers.boundHandleInteractionStart);
+      coverPage.removeEventListener('mousedown', eventHandlers.boundHandleInteractionStart);
+      if (interactionCue && eventHandlers.clickCue) {
+        interactionCue.removeEventListener('click', eventHandlers.clickCue);
+      }
+    }
+
+    try {
+      if (sessionStorage.getItem(dismissedKey) === 'true') {
+        coverPage.style.transitionProperty = 'none'; // Hide instantly
+        requestAnimationFrame(() => {
+            coverPage.classList.add('dismissed');
+            isDismissed = true; // Set state
+            requestAnimationFrame(() => { // Restore transition property for future if needed
+                coverPage.style.transitionProperty = '';
+            });
+        });
+        return; // Don't attach any listeners if already dismissed by session
+      }
+    } catch (e) {
+      console.warn('Session storage is not available or disabled.');
+    }
+
+    function handleInteractionStart(event) {
+      if (isDismissed || isInteracting) return;
+
+      const isTouchEvent = event.type.startsWith('touch');
+      if (!isTouchEvent && event.button !== 0) return; // Only left mouse button
+
+      if (!isTouchEvent) event.preventDefault(); // Prevent text selection/drag for mouse
+
+      isInteracting = true;
+      startY_interaction = isTouchEvent ? event.touches[0].clientY : event.clientY;
+      initialTranslateYOnDragStart = currentAppliedTranslateY; // Capture current Y pos
+      
+      coverPage.style.transition = 'none'; // Direct manipulation
+
+      if (isTouchEvent) {
+        coverPage.addEventListener('touchmove', eventHandlers.boundHandleInteractionMove, { passive: false });
+        coverPage.addEventListener('touchend', eventHandlers.boundHandleInteractionEnd, { passive: false });
+        coverPage.addEventListener('touchcancel', eventHandlers.boundHandleInteractionEnd, { passive: false });
+      } else {
+        document.addEventListener('mousemove', eventHandlers.boundHandleInteractionMove, { passive: false });
+        document.addEventListener('mouseup', eventHandlers.boundHandleInteractionEnd, { passive: false });
+      }
+    }
+
+    function handleInteractionMove(event) {
+      if (!isInteracting || isDismissed) return;
+      event.preventDefault(); // Prevent page scroll during active drag/swipe
+
+      const isTouchEvent = event.type.startsWith('touch');
+      const currentPointerY = isTouchEvent ? event.touches[0].clientY : event.clientY;
+      let dragDelta = currentPointerY - startY_interaction;
+      applyTransform(initialTranslateYOnDragStart + dragDelta);
+    }
+
+    function handleInteractionEnd() {
+      if (!isInteracting || isDismissed) return;
+      isInteracting = false;
+      
+      coverPage.style.transition = ''; // Restore CSS transitions for snap/dismiss
+
+      document.removeEventListener('mousemove', eventHandlers.boundHandleInteractionMove);
+      document.removeEventListener('mouseup', eventHandlers.boundHandleInteractionEnd);
+      coverPage.removeEventListener('touchmove', eventHandlers.boundHandleInteractionMove);
+      coverPage.removeEventListener('touchend', eventHandlers.boundHandleInteractionEnd);
+      coverPage.removeEventListener('touchcancel', eventHandlers.boundHandleInteractionEnd);
+      
+      const upwardDisplacement = -currentAppliedTranslateY;
+      const dismissThresholdValue = coverPage.offsetHeight * DISMISS_THRESHOLD_PERCENT;
+
+      if (upwardDisplacement > dismissThresholdValue) {
+        dismissCover();
+      } else {
+        applyTransform(0); // Snap back to original position
+      }
+    }
+    
+    eventHandlers.boundHandleInteractionStart = handleInteractionStart;
+    eventHandlers.boundHandleInteractionMove = handleInteractionMove;
+    eventHandlers.boundHandleInteractionEnd = handleInteractionEnd;
+
+    coverPage.addEventListener('touchstart', eventHandlers.boundHandleInteractionStart, { passive: false });
+    coverPage.addEventListener('mousedown', eventHandlers.boundHandleInteractionStart, { passive: false });
+
+
+    eventHandlers.scroll = function handleScroll(event) {
+      if (isDismissed || isInteracting) return; // Don't scroll if dragging or dismissed
+      
+      event.preventDefault(); // Prevent page behind from scrolling
+      coverPage.style.transition = 'none'; // Direct manipulation
+
+      applyTransform(currentAppliedTranslateY - event.deltaY * SCROLL_SENSITIVITY);
+
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        if (isDismissed || isInteracting) return; // Check again in case state changed during timeout
+        
+        coverPage.style.transition = ''; // Restore transitions for snap/dismiss
+        const upwardDisplacement = -currentAppliedTranslateY;
+        const dismissThresholdValue = coverPage.offsetHeight * DISMISS_THRESHOLD_PERCENT;
+
+        if (upwardDisplacement > dismissThresholdValue) {
+          dismissCover();
+        } else if (currentAppliedTranslateY !== 0) { // Only snap if not already at 0
+          applyTransform(0); // Snap back
+        }
+      }, 150); // Adjust timeout for scroll end detection
+    };
+    document.addEventListener('wheel', eventHandlers.scroll, { passive: false });
+
+
+    eventHandlers.clickCue = function handleClick() {
+      if (isDismissed) return;
+      dismissCover();
+    };
+    if (interactionCue) {
+      interactionCue.addEventListener('click', eventHandlers.clickCue);
+    }
+
+    eventHandlers.keyDown = function handleKeyDown(event) {
+      if (isDismissed) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+        if (document.activeElement === interactionCue) {
+           event.preventDefault();
+           dismissCover();
+        }
+      }
+      if (event.key === 'Escape') {
+        dismissCover();
+      }
+    };
+    document.addEventListener('keydown', eventHandlers.keyDown);
+
+    // Auto-focus interaction cue for accessibility
+    setTimeout(() => {
+      if (!isDismissed && interactionCue && typeof interactionCue.focus === 'function') {
+        if (!coverPage.classList.contains('dismissed')) { // Check again, session might have dismissed it
+            interactionCue.focus({ preventScroll: true });
+        }
+      }
+    }, 1600);
+  });
+})();</script>  <canvas id="ascii-background-canvas" data-astro-cid-h5csewep></canvas>   <nav class="navbar" data-astro-cid-5blmo7yk> <div class="navbar-container" data-astro-cid-5blmo7yk> <a href="/" class="navbar-logo" data-astro-cid-5blmo7yk> <img src="/logo.png" alt="SOS-PC Company Logo" width="30" height="30" data-astro-cid-5blmo7yk>  <span data-astro-cid-5blmo7yk>SOS-PC</span> </a> <button id="navbar-menu-toggle-button" class="navbar-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" data-astro-cid-5blmo7yk> <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-5blmo7yk><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" data-astro-cid-5blmo7yk></path></svg> <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display: none;" data-astro-cid-5blmo7yk><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" data-astro-cid-5blmo7yk></path></svg> </button> <div id="navbar-collapsible-content" class="navbar-collapsible-content" data-astro-cid-5blmo7yk> <div class="navbar-links" data-astro-cid-5blmo7yk> <a href="/" data-astro-cid-5blmo7yk>Accueil</a> <a href="/#services" data-astro-cid-5blmo7yk>Services</a> <a href="/#contact" data-astro-cid-5blmo7yk>Contact</a> <!-- Add more links as needed --> </div> <button id="theme-toggle" aria-label="Toggle theme" data-astro-cid-dz5h74bc> <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-dz5h74bc><circle cx="12" cy="12" r="5" data-astro-cid-dz5h74bc></circle><line x1="12" y1="1" x2="12" y2="3" data-astro-cid-dz5h74bc></line><line x1="12" y1="21" x2="12" y2="23" data-astro-cid-dz5h74bc></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-astro-cid-dz5h74bc></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-astro-cid-dz5h74bc></line><line x1="1" y1="12" x2="3" y2="12" data-astro-cid-dz5h74bc></line><line x1="21" y1="12" x2="23" y2="12" data-astro-cid-dz5h74bc></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-astro-cid-dz5h74bc></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-astro-cid-dz5h74bc></line></svg> <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-dz5h74bc><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-dz5h74bc></path></svg> </button> <script>
+  // src/components/ThemeSwitcher.astro <script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('.sun-icon');
+  const moonIcon = themeToggle.querySelector('.moon-icon');
+  const documentElement = document.documentElement;
+
+  const applyTheme = (theme) => {
+    if (theme === 'dark') {
+      documentElement.classList.add('dark');
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
+    } else {
+      documentElement.classList.remove('dark');
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+  };
+
+  const toggleTheme = () => {
+    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+  };
+
+  // Initial theme setup
+  const savedTheme = localStorage.getItem('theme');
+  const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const initialTheme = savedTheme || preferredTheme;
+  applyTheme(initialTheme);
+
+  themeToggle.addEventListener('click', toggleTheme);
+</script>  </div> </div> </nav>   <main tabindex="-1" data-astro-cid-sckkx6r4 style="--maxNavbarHeight: 120px;--maxNavbarHeight: 120px;">   <h1 data-astro-cid-j7pv25f6>SOS-PC</h1> <p class="tagline" data-astro-cid-j7pv25f6>Votre partenaire pour des solutions informatiques et web personnalisées.</p> <section id="about" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>À Propos de SOS-PC</h2> <p data-astro-cid-j7pv25f6>
+SOS-PC, dirigé par un auto-entrepreneur passionné, propose une gamme complète de services pour répondre à vos besoins technologiques. Notre objectif est d'offrir des solutions fiables, performantes et adaptées, que ce soit pour les particuliers ou les professionnels.
+</p> </section> <section id="services" class="cta-section" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>Découvrez Nos Solutions</h2> <p class="services-intro" data-astro-cid-j7pv25f6>Que vous ayez besoin d'une réparation, d'un nouveau site web ou d'une solution d'hébergement spécifique, nous avons l'expertise qu'il vous faut.</p> <div class="service-cards" data-astro-cid-j7pv25f6> <article class="service-card" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/300x150.png?text=Réparation+PC" alt="Réparation Informatique" class="service-card-image" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6><i class="icon-repair" data-astro-cid-j7pv25f6></i> Réparation Informatique</h3> <p data-astro-cid-j7pv25f6>
+Dépannage, montage sur mesure, optimisation. Nous redonnons vie à votre matériel.
+</p> <ul data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Diagnostic et dépannage</li> <li data-astro-cid-j7pv25f6>Remplacement de composants</li> <li data-astro-cid-j7pv25f6>Montage PC personnalisé</li> <li data-astro-cid-j7pv25f6>Optimisation & Récupération</li> </ul> <a href="#contact" class="cta-button" data-astro-cid-j7pv25f6>Demander un devis</a> </article> <article class="service-card" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/300x150.png?text=Site+Web" alt="Création de Site Web" class="service-card-image" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6><i class="icon-web" data-astro-cid-j7pv25f6></i> Création de Sites Web</h3> <p data-astro-cid-j7pv25f6>
+Sites vitrines modernes, responsives et optimisés pour votre présence en ligne.
+</p> <ul data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Sites vitrines pro</li> <li data-astro-cid-j7pv25f6>Design responsive</li> <li data-astro-cid-j7pv25f6>SEO de base inclus</li> <li data-astro-cid-j7pv25f6>Fonctionnalités sur mesure</li> </ul> <a href="#contact" class="cta-button" data-astro-cid-j7pv25f6>Discutons de votre projet</a> </article> <article class="service-card" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/300x150.png?text=Streaming+Media" alt="Hébergement Streaming" class="service-card-image" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6><i class="icon-stream" data-astro-cid-j7pv25f6></i> Hébergement Streaming</h3> <p data-astro-cid-j7pv25f6>
+Votre propre plateforme média (Jellyfin, etc.) accessible partout, en toute sécurité.
+</p> <ul data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Installation Jellyfin/similaires</li> <li data-astro-cid-j7pv25f6>Conseils matériel/serveur</li> <li data-astro-cid-j7pv25f6>Accès sécurisé</li> <li data-astro-cid-j7pv25f6>Maintenance de base</li> </ul> <a href="#contact" class="cta-button" data-astro-cid-j7pv25f6>En savoir plus</a> </article> <article class="service-card" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/300x150.png?text=Modèle+IA" alt="Hébergement Modèles IA" class="service-card-image" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6><i class="icon-ai" data-astro-cid-j7pv25f6></i> Hébergement Modèles IA</h3> <p data-astro-cid-j7pv25f6>
+Déployez et gérez vos modèles d'IA pour explorer leur potentiel. (Service en développement).
+</p> <ul data-astro-cid-j7pv25f6> <li data-astro-cid-j7pv25f6>Conseils hébergement</li> <li data-astro-cid-j7pv25f6>Aide au déploiement</li> <li data-astro-cid-j7pv25f6>Gestion infrastructure</li> <li data-astro-cid-j7pv25f6>Contactez-nous pour discuter</li> </ul> <a href="#contact" class="cta-button" data-astro-cid-j7pv25f6>Contactez-nous</a> </article> </div> </section> <section id="location" class="map-section" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>Notre Zone d'Intervention Principale</h2> <p data-astro-cid-j7pv25f6>Basé près de 04700 Le Castellet, nous intervenons dans les environs.</p> <div class="map-container" data-astro-cid-j7pv25f6> <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=5.755,43.843,5.795,43.863&layer=mapnik&marker=43.853,5.775" style="border: 1px solid black; border-radius: 8px;" title="Carte de localisation SOS-PC" data-astro-cid-j7pv25f6></iframe> <br data-astro-cid-j7pv25f6> <small data-astro-cid-j7pv25f6> <a href="https://www.openstreetmap.org/?mlat=43.853&mlon=5.775#map=15/43.853/5.775" target="_blank" data-astro-cid-j7pv25f6>Voir une carte plus grande</a> </small> </div> </section> <section id="vitrine" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>Notre Vitrine Web</h2> <p class="vitrine-intro" data-astro-cid-j7pv25f6>Quelques exemples de sites web que nous avons réalisés.</p> <div class="swiper vitrine-swiper" data-astro-cid-j7pv25f6> <div class="swiper-wrapper" data-astro-cid-j7pv25f6> <div class="swiper-slide" data-astro-cid-j7pv25f6> <article class="vitrine-item" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/400x250.png?text=Site+Artisan" alt="Aperçu Site Artisan" class="vitrine-image" data-astro-cid-j7pv25f6> <div class="vitrine-content" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Site Vitrine pour Artisan</h3> <p data-astro-cid-j7pv25f6>Création d'un site web moderne et responsive pour un artisan local, mettant en valeur ses services et réalisations.</p> <a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link" data-astro-cid-j7pv25f6>Voir le site</a> </div> </article> </div> <div class="swiper-slide" data-astro-cid-j7pv25f6> <article class="vitrine-item" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/400x250.png?text=Site+Restaurant" alt="Aperçu Site Restaurant" class="vitrine-image" data-astro-cid-j7pv25f6> <div class="vitrine-content" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Site Web pour Restaurant</h3> <p data-astro-cid-j7pv25f6>Développement d'un site avec menu en ligne, galerie photos et formulaire de réservation.</p> <a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link" data-astro-cid-j7pv25f6>Voir le site</a> </div> </article> </div> <div class="swiper-slide" data-astro-cid-j7pv25f6> <article class="vitrine-item" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/400x250.png?text=Portfolio+Photographe" alt="Aperçu Portfolio Photographe" class="vitrine-image" data-astro-cid-j7pv25f6> <div class="vitrine-content" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Portfolio en Ligne</h3> <p data-astro-cid-j7pv25f6>Mise en place d'un portfolio élégant pour un photographe, optimisé pour l'affichage d'images haute résolution.</p> <a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link" data-astro-cid-j7pv25f6>Voir le site</a> </div> </article> </div> <div class="swiper-slide" data-astro-cid-j7pv25f6> <article class="vitrine-item" data-astro-cid-j7pv25f6> <img src="https://via.placeholder.com/400x250.png?text=Aperçu+Bolt+DIY+2" alt="Aperçu Projet Bolt DIY 2" class="vitrine-image" data-astro-cid-j7pv25f6> <div class="vitrine-content" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Projet Bolt DIY 2</h3> <p data-astro-cid-j7pv25f6>Un exemple de site web interactif créé avec Bolt.</p> <a href="https://bolt-diy-2-1746478852874.netlify.app/" target="_blank" rel="noopener noreferrer" class="vitrine-link" data-astro-cid-j7pv25f6>Voir le site</a> </div> </article> </div> </div> <div class="swiper-pagination" data-astro-cid-j7pv25f6></div> <div class="swiper-button-prev" data-astro-cid-j7pv25f6></div> <div class="swiper-button-next" data-astro-cid-j7pv25f6></div> </div> </section> <section id="contact" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>Contactez-nous</h2> <p data-astro-cid-j7pv25f6>
+Pour toute demande d'information ou devis, n'hésitez pas à remplir le formulaire ci-dessous ou à nous contacter directement via les options ci-dessous. Nous serons ravis de discuter de votre projet.
+</p> <form class="contact-form" netlify data-astro-cid-j7pv25f6> <div class="form-group" data-astro-cid-j7pv25f6> <label for="name" data-astro-cid-j7pv25f6>Nom :</label> <input type="text" id="name" name="name" required data-astro-cid-j7pv25f6> </div> <div class="form-group" data-astro-cid-j7pv25f6> <label for="email" data-astro-cid-j7pv25f6>Email :</label> <input type="email" id="email" name="email" required data-astro-cid-j7pv25f6> </div> <div class="form-group" data-astro-cid-j7pv25f6> <label for="subject" data-astro-cid-j7pv25f6>Sujet :</label> <input type="text" id="subject" name="subject" required data-astro-cid-j7pv25f6> </div> <div class="form-group" data-astro-cid-j7pv25f6> <label for="message" data-astro-cid-j7pv25f6>Message :</label> <textarea id="message" name="message" rows="5" required data-astro-cid-j7pv25f6></textarea> </div> <button type="submit" class="submit-button" data-astro-cid-j7pv25f6>Envoyer le Message</button> </form> <div class="contact-buttons" data-astro-cid-j7pv25f6> <p data-astro-cid-j7pv25f6>Ou contactez-nous directement :</p> <a href="tel:+33XXXXXXXXX" class="contact-button phone" data-astro-cid-j7pv25f6> <span class="icon" data-astro-cid-j7pv25f6>📞</span> Téléphone
+</a> <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" rel="noopener noreferrer" class="contact-button discord" data-astro-cid-j7pv25f6> <span class="icon" data-astro-cid-j7pv25f6>💬</span> Discord
+</a> <a href="https://t.me/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" class="contact-button telegram" data-astro-cid-j7pv25f6> <span class="icon" data-astro-cid-j7pv25f6>✈️</span> Telegram
+</a> </div> </section>  </main> <footer data-astro-cid-sckkx6r4 style="--maxNavbarHeight: 120px;--maxNavbarHeight: 120px;"> <p data-astro-cid-sckkx6r4 style="--maxNavbarHeight: 120px;--maxNavbarHeight: 120px;">&copy; 2025 SOS-PC. Tous droits réservés.</p> </footer>  </body> </html>   
