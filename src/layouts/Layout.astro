@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { title, description = "SOS-PC - Solutions informatiques et web" } = Astro.props;
-const maxNavbarHeight = "120px";
+const maxNavbarHeight = "80px"; // Adjusted navbar height
 ---
 
 <!doctype html>
@@ -227,7 +227,7 @@ const maxNavbarHeight = "120px";
 		margin: 0 auto;
 		padding: 1.5rem;
 		width: 100%;
-		max-width: 100ch;
+		max-width: 140ch; /* UPDATED: Increased max-width from 120ch to 140ch */
 		box-sizing: border-box;
 		background-color: var(--main-bg-color); /* Use CSS variable */
 		border-radius: 8px;
@@ -312,7 +312,7 @@ const maxNavbarHeight = "120px";
 			margin-top: 1rem;
 			margin-bottom: 1rem;
 			padding: 1rem;
-			max-width: 95%;
+			max-width: 95%; /* On small screens, use percentage for better fit */
 		}
 	}
 </style>

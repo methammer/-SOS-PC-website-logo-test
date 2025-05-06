@@ -1,286 +1,234 @@
 ---
-// src/components/Navbar.astro
 import ThemeSwitcher from './ThemeSwitcher.astro';
 
-const logoPath = "/logo.png"; // Updated logo path
-const siteTitle = "SOS-PC";
+// Define navigation links - adjust hrefs and text as needed
+const navLinks = [
+  { href: "/", text: "Accueil", id: "home" },
+  { href: "/#services", text: "Services", id: "services" },
+  { href: "/#portfolio", text: "Portfolio", id: "portfolio" },
+  { href: "/#contact", text: "Contact", id: "contact" },
+];
+
+// You can retrieve this from a global config or define it here
+const siteTitle = "SOS-PC"; 
 ---
-
-<nav class="navbar">
-  <div class="navbar-container">
-    <a href="/" class="navbar-logo">
-      <img id="navbar-logo-image" src={logoPath} alt="SOS-PC Company Logo" />
-      <span>{siteTitle}</span>
+<nav id="main-navbar" aria-label="Navigation principale">
+  <div class="nav-container">
+    <a href="/" class="logo-container" aria-label={`Retour à la page d'accueil de ${siteTitle}`}>
+      <img src="/logo.png" alt={`${siteTitle} Logo`} id="navbar-logo" />
+      <span class="logo-text">{siteTitle}</span>
     </a>
+    
+    <ul class="nav-links">
+      {navLinks.map(link => (
+        <li><a href={link.href} data-navid={link.id}>{link.text}</a></li>
+      ))}
+    </ul>
 
-    <button id="navbar-menu-toggle-button" class="navbar-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-      <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
-      <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display: none;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
-    </button>
-
-    <div id="navbar-collapsible-content" class="navbar-collapsible-content">
-      <div class="navbar-links">
-        <a href="/">Accueil</a>
-        <a href="/#services">Services</a>
-        <a href="/#contact">Contact</a>
-        <!-- Add more links as needed -->
-      </div>
+    <div class="theme-switcher-container">
       <ThemeSwitcher />
     </div>
   </div>
 </nav>
 
-<script>
-  // src/components/Navbar.astro <script>
-  const menuToggleButton = document.getElementById('navbar-menu-toggle-button');
-  const collapsibleContent = document.getElementById('navbar-collapsible-content');
-  const thresholdWidth = 768; // Breakpoint for showing/hiding menu toggle button
-  
-  if (menuToggleButton && collapsibleContent) {
-    const hamburgerIcon = menuToggleButton.querySelector('.hamburger-icon');
-    const closeIcon = menuToggleButton.querySelector('.close-icon');
-
-    function updateMenuVisualState(isOpen) {
-      collapsibleContent.classList.toggle('is-open', isOpen);
-      menuToggleButton.setAttribute('aria-expanded', isOpen.toString());
-      if (hamburgerIcon) hamburgerIcon.style.display = isOpen ? 'none' : 'block';
-      if (closeIcon) closeIcon.style.display = isOpen ? 'block' : 'none';
-    }
-
-    function handleMenuToggleClick() {
-      const isOpen = collapsibleContent.classList.contains('is-open');
-      updateMenuVisualState(!isOpen);
-    }
-
-    function handleMenuLinkClick() {
-      if (collapsibleContent.classList.contains('is-open')) {
-        updateMenuVisualState(false);
-      }
-    }
-
-    menuToggleButton.addEventListener('click', handleMenuToggleClick);
-    
-    const links = collapsibleContent.querySelectorAll('a');
-    links.forEach(link => {
-      link.addEventListener('click', handleMenuLinkClick);
-    });
-
-    function manageMenuButtonVisibilityAndState() {
-      const isOpen = collapsibleContent.classList.contains('is-open');
-
-      if (window.innerWidth <= thresholdWidth) {
-        menuToggleButton.style.display = 'flex';
-        // Ensure icons are correct based on current menu state
-        if (hamburgerIcon) hamburgerIcon.style.display = isOpen ? 'none' : 'block';
-        if (closeIcon) closeIcon.style.display = isOpen ? 'block' : 'none';
-      } else {
-        menuToggleButton.style.display = 'none';
-        // If button is hidden (larger screen), ensure menu is closed
-        if (isOpen) {
-          updateMenuVisualState(false);
-        }
-      }
-    }
-
-    // Initial check on load
-    manageMenuButtonVisibilityAndState();
-
-    // Listen for window resize events
-    window.addEventListener('resize', manageMenuButtonVisibilityAndState);
-
-  } else {
-    console.error('Navbar menu elements not found. Mobile menu script not fully initialized.');
+<style define:vars={{ siteTitle }}>
+  /* Using --maxNavbarHeight from Layout.astro for consistency */
+  /* Default fallback if --maxNavbarHeight is not available for some reason */
+  :root {
+    --navbar-internal-height: var(--maxNavbarHeight, 80px); 
   }
 
-  // Logo bounce animation
-  const logoImage = document.getElementById('navbar-logo-image');
-  if (logoImage) {
-    logoImage.addEventListener('click', (event) => {
-      // Prevent navigation if the logo itself is clicked,
-      // but allow if the link wrapper is clicked.
-      // This is a simple way, for more complex scenarios, check event.target.
-      event.preventDefault(); 
-      event.stopPropagation(); // Stop event from bubbling to the <a> tag if needed
-
-      logoImage.classList.add('bounce-animation');
-      
-      // Remove the class after the animation completes
-      logoImage.addEventListener('animationend', () => {
-        logoImage.classList.remove('bounce-animation');
-      }, { once: true }); // Ensure the event listener is removed after firing once
-    });
-
-    // Optional: Allow click on the parent <a> to also trigger animation
-    // and still navigate.
-    const logoLink = logoImage.closest('.navbar-logo');
-    if (logoLink) {
-      logoLink.addEventListener('click', (event) => {
-        // Check if the click was directly on the image, if so, it's handled already
-        if (event.target !== logoImage) {
-          logoImage.classList.add('bounce-animation');
-          logoImage.addEventListener('animationend', () => {
-            logoImage.classList.remove('bounce-animation');
-          }, { once: true });
-        }
-        // Do not preventDefault here to allow navigation
-      });
-    }
-
-  } else {
-    console.error('Navbar logo image not found for animation.');
-  }
-</script>
-
-<style>
-  .navbar {
-    position: fixed;
+  nav#main-navbar {
+    background-color: var(--navbar-bg-color);
+    border-bottom: 1px solid var(--navbar-border-color);
+    position: fixed; /* Fixed position at the top */
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--navbar-bg-color, rgba(35, 38, 45, 0.9));
-    backdrop-filter: blur(5px);
-    padding: 5px 1.5rem; /* Updated padding: 5px top/bottom, 1.5rem left/right */
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid var(--navbar-border-color, #444);
+    z-index: 1000; /* Ensure navbar is above other content */
     box-sizing: border-box;
-    transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease; /* Added padding to transition */
+    height: var(--navbar-internal-height);
+    padding: 0 1.5rem; /* Horizontal padding */
+    display: flex; /* For vertical alignment of .nav-container */
+    align-items: center; /* Vertically center .nav-container */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
-  .navbar-container {
+  .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-    flex-wrap: wrap; 
+    width: 100%;
+    max-width: var(--max-content-width, 1200px); /* Max width for navbar content itself */
+    margin: 0 auto; /* Center the container */
   }
 
-  .navbar-logo {
+  .logo-container {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    color: var(--text-color, white);
     text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2rem; /* Site title font size */
-    flex-shrink: 0;
-    transition: color 0.3s ease;
-    cursor: pointer; /* Indicate it's clickable */
+    color: var(--text-color); /* Inherit text color */
   }
 
-  .navbar-logo img {
-    display: block;
-    height: 50px; /* Updated height to 50px */
-    width: auto;     /* Maintain aspect ratio */
-    object-fit: contain; /* Ensures the image scales within dimensions without distortion */
-  }
-
-  /* Bounce Animation */
-  .navbar-logo img.bounce-animation {
-    animation: logo-bounce 0.5s ease-in-out;
-  }
-
-  @keyframes logo-bounce {
-    0%, 100% {
-      transform: scale(1);
-    }
-    25% {
-      transform: scale(0.95);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    75% {
-      transform: scale(0.98);
-    }
-  }
-
-
-  .navbar-menu-toggle {
-    display: none; 
-    background: none;
-    border: none;
-    color: var(--text-color);
+  #navbar-logo {
+    /* Dynamically size logo based on navbar height, with a max */
+    height: calc(var(--navbar-internal-height) - 30px); /* e.g., 80px - 30px = 50px */
+    max-height: 50px; /* Absolute maximum height for the logo */
+    width: auto; /* Maintain aspect ratio */
     cursor: pointer;
-    padding: 0.5rem;
+    margin-right: 10px; /* Space between logo and text */
+    transition: transform 0.3s ease; /* For subtle hover effects if any */
+  }
+  
+  .logo-text {
+    font-size: clamp(1.2rem, 3vw, 1.5rem); /* Responsive font size */
+    font-weight: bold;
+    color: var(--heading-color); /* Use heading color for logo text */
+    transition: color 0.3s ease;
   }
 
-  .navbar-menu-toggle svg {
-    width: 24px;
-    height: 24px;
-    display: block; 
+  /* Logo bounce animation */
+  #navbar-logo.bounce {
+    animation: logoBounce 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   }
 
-  .navbar-collapsible-content {
-    display: flex; 
-    align-items: center;
-    gap: 1rem; 
+  @keyframes logoBounce {
+    0%, 100% { transform: scale(1) translateY(0); }
+    10% { transform: scale(1.1, 0.9) translateY(0); }
+    30% { transform: scale(0.9, 1.1) translateY(-10px); } /* Bounce up */
+    50% { transform: scale(1.05, 0.95) translateY(0); }
+    70% { transform: scale(1) translateY(-5px); } /* Smaller bounce */
+    90% { transform: scale(1) translateY(0); }
   }
 
-  .navbar-links {
-    display: flex; 
-    gap: 0.5rem 1.5rem; 
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 1.75rem); /* Responsive gap */
+    margin: 0;
+    padding: 0;
   }
 
-  .navbar-links a {
-    color: var(--navbar-link-color, #e0e0e0);
+  .nav-links a {
     text-decoration: none;
-    transition: color 0.2s ease;
-    padding: 0.2rem 0;
+    color: var(--navbar-link-color);
+    font-weight: 500;
+    font-size: clamp(0.9rem, 2vw, 1rem); /* Responsive font size */
+    padding: 0.5rem 0.25rem; /* Padding for touch targets and underline space */
+    position: relative;
+    transition: color 0.3s ease;
   }
 
-  .navbar-links a:hover {
-    color: var(--accent-light);
-    text-decoration: underline;
+  .nav-links a::after { /* Underline effect */
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--accent);
+    transition: width 0.3s ease-in-out;
   }
 
+  .nav-links a:hover,
+  .nav-links a.active { /* Style for hover and active links */
+    color: var(--accent); /* Use accent color from global styles */
+  }
+  html.dark .nav-links a:hover,
+  html.dark .nav-links a.active {
+    color: rgb(var(--accent-light)); /* Lighter accent for dark mode */
+  }
+
+
+  .nav-links a:hover::after,
+  .nav-links a.active::after {
+    width: 100%;
+  }
+  
+  .theme-switcher-container {
+    /* Minimal styling, relies on ThemeSwitcher's own styles */
+    display: flex;
+    align-items: center;
+  }
+
+  /* Responsive adjustments for navbar */
   @media (max-width: 768px) {
-    .navbar-menu-toggle {
-      align-items: center; 
-      justify-content: center;
-      order: 1; 
+    nav#main-navbar {
+      padding: 0 1rem; /* Reduce padding on smaller screens */
     }
-
-    .navbar-collapsible-content {
-      width: 100%;
-      order: 2; 
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-      flex-direction: column; 
-      align-items: center; 
-      gap: 0; 
-      padding: 0 1rem; 
+    .nav-links {
+      /* Example: Hide links and show a burger menu icon instead */
+      /* For now, just reduce gap or let them wrap if too many */
+      gap: clamp(0.5rem, 2vw, 1rem);
     }
-
-    .navbar-collapsible-content.is-open {
-      max-height: 70vh; 
-      padding: 1rem 1rem 1.5rem; 
-      border-top: 1px solid var(--navbar-border-color, #444);
-      margin-top: 0.8rem; /* This margin might need adjustment if the main navbar padding changes significantly */
+    .logo-text {
+      display: none; /* Hide logo text on very small screens to save space */
     }
-
-    .navbar-links {
-      flex-direction: column; 
-      align-items: center; 
-      width: 100%;
-      gap: 0.8rem; 
-      margin-bottom: 1rem; 
+    #navbar-logo {
+       height: calc(var(--navbar-internal-height) - 36px); /* e.g. 80px - 36px = 44px */
+       max-height: 40px; /* Max logo height on small screens */
     }
-
-    .navbar-links a {
-      padding: 0.5rem 0; 
-      width: 100%;
-      text-align: center;
-      border-radius: 4px;
+  }
+  @media (max-width: 480px) {
+    .nav-links {
+        gap: 0.5rem; /* Further reduce gap */
     }
-    .navbar-links a:hover {
-      background-color: rgba(128,128,128,0.1); 
-    }
-
-    .navbar-collapsible-content > :global(.theme-switcher-wrapper) { 
-      margin-top: 0.5rem;
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.1rem;
     }
   }
 </style>
+
+<script>
+  // astro:page-load ensures this runs on initial load and subsequent page navigations
+  document.addEventListener('astro:page-load', () => {
+    const logoElement = document.getElementById('navbar-logo');
+    
+    if (logoElement) {
+      logoElement.addEventListener('click', (event) => {
+        // The logo is inside an <a> tag, so clicking it will navigate.
+        // If you want to prevent navigation and only animate, use event.preventDefault().
+        // For now, let's assume navigation is desired.
+
+        // Avoid re-triggering if already bouncing, or remove and re-add for restart
+        if (logoElement.classList.contains('bounce')) {
+          // Option 1: Prevent re-triggering during animation
+          return; 
+          // Option 2: Restart animation (can be janky if clicked too fast)
+          // logoElement.classList.remove('bounce');
+          // void logoElement.offsetWidth; // Force reflow to restart animation
+        }
+
+        logoElement.classList.add('bounce');
+        
+        // Remove the class after animation completes to allow re-triggering
+        logoElement.addEventListener('animationend', () => {
+          logoElement.classList.remove('bounce');
+        }, { once: true }); // Listener removed after first trigger
+      });
+    }
+
+    // Active navigation link highlighting
+    function updateActiveNavLink() {
+      const currentPath = window.location.pathname + window.location.hash;
+      const navLinkElements = document.querySelectorAll('.nav-links a');
+      
+      navLinkElements.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        // Check for exact match or root path match for home
+        if (linkHref === currentPath || (linkHref === "/" && (currentPath === "/index.html" || currentPath === "/"))) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    
+    updateActiveNavLink(); // Call on page load
+
+    // Optional: Listen for hash changes if you have same-page anchor links
+    window.addEventListener('hashchange', updateActiveNavLink);
+  });
+</script>
