@@ -276,20 +276,21 @@ const siteTitle = "SOS-PC";
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    console.log('astro:page-load event fired. Initializing navbar script.'); // New log
+  // VERY IMPORTANT: Check if this log appears in the console
+  console.log('Navbar.astro SCRIPT TAG EXECUTED'); 
+
+  function initializeNavbar() {
+    console.log('DOMContentLoaded event fired. Initializing navbar script.');
 
     const logoElement = document.getElementById('navbar-logo');
     const hamburgerButton = document.querySelector('.hamburger-menu');
     const navLinksList = document.getElementById('nav-links-list');
 
-    // Log selected elements
-    console.log('Selected hamburgerButton:', hamburgerButton); // New log
-    console.log('Selected navLinksList:', navLinksList); // New log
+    console.log('Selected hamburgerButton:', hamburgerButton);
+    console.log('Selected navLinksList:', navLinksList);
 
-    // Logo bounce animation
     if (logoElement) {
-      console.log('Logo element found. Attaching click listener.'); // New log
+      console.log('Logo element found. Attaching click listener.');
       logoElement.addEventListener('click', () => {
         logoElement.classList.remove('bounce');
         void logoElement.offsetWidth; 
@@ -299,30 +300,29 @@ const siteTitle = "SOS-PC";
         logoElement.classList.remove('bounce');
       });
     } else {
-      console.error('Logo element #navbar-logo not found!'); // New log
+      console.error('Logo element #navbar-logo not found!');
     }
 
-    // Hamburger menu toggle
     if (hamburgerButton && navLinksList) {
-      console.log('Hamburger button and nav links list found. Attaching click listener to hamburger.'); // New log
+      console.log('Hamburger button and nav links list found. Attaching click listener to hamburger.');
       hamburgerButton.addEventListener('click', () => {
-        console.log('Hamburger clicked!'); // Existing log - VERY IMPORTANT
+        console.log('Hamburger clicked!'); 
         
         const isExpanded = navLinksList.classList.toggle('nav-active');
-        console.log('navLinksList class "nav-active" toggled. Is now expanded:', isExpanded); // New log
+        console.log('navLinksList class "nav-active" toggled. Is now expanded:', isExpanded);
         
         hamburgerButton.classList.toggle('active');
-        console.log('hamburgerButton class "active" toggled.'); // New log
+        console.log('hamburgerButton class "active" toggled.');
         
         hamburgerButton.setAttribute('aria-expanded', String(isExpanded));
-        console.log('hamburgerButton aria-expanded set to:', String(isExpanded)); // New log
+        console.log('hamburgerButton aria-expanded set to:', String(isExpanded));
         
         if (isExpanded) {
-          console.log('Menu is expanded. Attaching click listeners to nav links to close menu.'); // New log
+          console.log('Menu is expanded. Attaching click listeners to nav links to close menu.');
           const links = navLinksList.querySelectorAll('a');
           links.forEach(link => {
             const closeMenuOnLinkClick = () => {
-              console.log('Nav link clicked, closing menu.'); // New log
+              console.log('Nav link clicked, closing menu.');
               navLinksList.classList.remove('nav-active');
               hamburgerButton.classList.remove('active');
               hamburgerButton.setAttribute('aria-expanded', 'false');
@@ -333,14 +333,13 @@ const siteTitle = "SOS-PC";
       });
     } else {
       if (!hamburgerButton) {
-        console.error('Hamburger button .hamburger-menu not found!'); // New log
+        console.error('Hamburger button .hamburger-menu not found!');
       }
       if (!navLinksList) {
-        console.error('Nav links list #nav-links-list not found!'); // New log
+        console.error('Nav links list #nav-links-list not found!');
       }
     }
 
-    // Active navigation link highlighting
     function updateActiveNavLink() {
       const currentPath = window.location.pathname + window.location.hash;
       const navLinkElements = document.querySelectorAll('.nav-links a');
@@ -359,12 +358,30 @@ const siteTitle = "SOS-PC";
       });
     }
     
-    console.log('Calling updateActiveNavLink initially.'); // New log
+    console.log('Calling updateActiveNavLink initially.');
     updateActiveNavLink();
     window.addEventListener('hashchange', () => {
-      console.log('hashchange event detected. Calling updateActiveNavLink.'); // New log
+      console.log('hashchange event detected. Calling updateActiveNavLink.');
       updateActiveNavLink();
     });
-    console.log('Navbar script initialization complete.'); // New log
+    console.log('Navbar script initialization complete.');
+  }
+
+  // Astro specific: Use astro:page-load for subsequent page navigations
+  // but also ensure it runs on initial load if DOMContentLoaded fires first or if astro:page-load is more reliable for Astro's lifecycle.
+  if (document.readyState === 'loading') {
+    // Loading hasn't finished yet
+    document.addEventListener('DOMContentLoaded', initializeNavbar);
+  } else {
+    // `DOMContentLoaded` has already fired
+    console.log('DOMContentLoaded already fired, calling initializeNavbar directly.');
+    initializeNavbar();
+  }
+  
+  // Also listen for Astro's page load event for client-side navigation
+  document.addEventListener('astro:page-load', () => {
+    console.log('astro:page-load event fired in Navbar.astro, re-initializing.');
+    initializeNavbar();
   });
+
 </script>
