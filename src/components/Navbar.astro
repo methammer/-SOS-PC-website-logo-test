@@ -9,7 +9,7 @@ const siteTitle = "SOS-PC";
 <nav class="navbar">
   <div class="navbar-container">
     <a href="/" class="navbar-logo">
-      <img src={logoPath} alt="SOS-PC Company Logo" width="30" height="30" /> {/* Updated alt text and potentially dimensions if needed */}
+      <img src={logoPath} alt="SOS-PC Company Logo" width="40" height="40" /> {/* Increased size */}
       <span>{siteTitle}</span>
     </a>
 
@@ -132,8 +132,7 @@ const siteTitle = "SOS-PC";
 
   .navbar-logo img {
     display: block;
-    /* You might need to adjust width/height or add object-fit if the new logo's aspect ratio is different */
-    /* object-fit: contain; */ 
+    object-fit: contain; /* Added for better scaling if aspect ratio isn't square */
   }
 
   .navbar-menu-toggle {
