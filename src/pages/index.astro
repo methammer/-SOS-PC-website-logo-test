@@ -1,0 +1,698 @@
+---
+import Layout from '../layouts/Layout.astro';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
+
+// JS Imports moved to the client-side script below
+---
+
+<Layout title="Accueil">
+	<h1>SOS-PC</h1>
+	<p class="tagline">Votre partenaire pour des solutions informatiques et web personnalisées.</p>
+
+	<section id="about">
+		<h2>À Propos de SOS-PC</h2>
+		<p>
+			SOS-PC, dirigé par un auto-entrepreneur passionné, propose une gamme complète de services pour répondre à vos besoins technologiques. Notre objectif est d'offrir des solutions fiables, performantes et adaptées, que ce soit pour les particuliers ou les professionnels.
+		</p>
+	</section>
+
+	<section id="services" class="cta-section">
+		<h2>Découvrez Nos Solutions</h2>
+		<p class="services-intro">Que vous ayez besoin d'une réparation, d'un nouveau site web ou d'une solution d'hébergement spécifique, nous avons l'expertise qu'il vous faut.</p>
+
+		<div class="service-cards">
+			<article class="service-card">
+				<img src="https://via.placeholder.com/300x150.png?text=Réparation+PC" alt="Réparation Informatique" class="service-card-image">
+				<h3><i class="icon-repair"></i> Réparation Informatique</h3>
+				<p>
+					Dépannage, montage sur mesure, optimisation. Nous redonnons vie à votre matériel.
+				</p>
+				<ul>
+					<li>Diagnostic et dépannage</li>
+					<li>Remplacement de composants</li>
+					<li>Montage PC personnalisé</li>
+					<li>Optimisation & Récupération</li>
+				</ul>
+				<a href="#contact" class="cta-button">Demander un devis</a>
+			</article>
+
+			<article class="service-card">
+				<img src="https://via.placeholder.com/300x150.png?text=Site+Web" alt="Création de Site Web" class="service-card-image">
+				<h3><i class="icon-web"></i> Création de Sites Web</h3>
+				<p>
+					Sites vitrines modernes, responsives et optimisés pour votre présence en ligne.
+				</p>
+				<ul>
+					<li>Sites vitrines pro</li>
+					<li>Design responsive</li>
+					<li>SEO de base inclus</li>
+					<li>Fonctionnalités sur mesure</li>
+				</ul>
+				<a href="#contact" class="cta-button">Discutons de votre projet</a>
+			</article>
+
+			<article class="service-card">
+				<img src="https://via.placeholder.com/300x150.png?text=Streaming+Media" alt="Hébergement Streaming" class="service-card-image">
+				<h3><i class="icon-stream"></i> Hébergement Streaming</h3>
+				<p>
+					Votre propre plateforme média (Jellyfin, etc.) accessible partout, en toute sécurité.
+				</p>
+				<ul>
+					<li>Installation Jellyfin/similaires</li>
+					<li>Conseils matériel/serveur</li>
+					<li>Accès sécurisé</li>
+					<li>Maintenance de base</li>
+				</ul>
+				<a href="#contact" class="cta-button">En savoir plus</a>
+			</article>
+
+			<article class="service-card">
+				<img src="https://via.placeholder.com/300x150.png?text=Modèle+IA" alt="Hébergement Modèles IA" class="service-card-image">
+				<h3><i class="icon-ai"></i> Hébergement Modèles IA</h3>
+				<p>
+					Déployez et gérez vos modèles d'IA pour explorer leur potentiel. (Service en développement).
+				</p>
+				<ul>
+					<li>Conseils hébergement</li>
+					<li>Aide au déploiement</li>
+					<li>Gestion infrastructure</li>
+					<li>Contactez-nous pour discuter</li>
+				</ul>
+				<a href="#contact" class="cta-button">Contactez-nous</a>
+			</article>
+		</div>
+	</section>
+
+	<section id="location" class="map-section">
+		<h2>Notre Zone d'Intervention Principale</h2>
+		<p>Basé près de 04700 Le Castellet, nous intervenons dans les environs.</p>
+		<div class="map-container">
+			<iframe
+				width="100%"
+				height="300"
+				frameborder="0"
+				scrolling="no"
+				marginheight="0"
+				marginwidth="0"
+				src="https://www.openstreetmap.org/export/embed.html?bbox=5.755,43.843,5.795,43.863&layer=mapnik&marker=43.853,5.775"
+				style="border: 1px solid black; border-radius: 8px;"
+				title="Carte de localisation SOS-PC"
+			></iframe>
+			<br/>
+			<small>
+				<a href="https://www.openstreetmap.org/?mlat=43.853&mlon=5.775#map=15/43.853/5.775" target="_blank">Voir une carte plus grande</a>
+			</small>
+		</div>
+	</section>
+
+	<section id="vitrine">
+		<h2>Notre Vitrine Web</h2>
+		<p class="vitrine-intro">Quelques exemples de sites web que nous avons réalisés.</p>
+
+		<div class="swiper vitrine-swiper">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<article class="vitrine-item">
+						<img src="https://via.placeholder.com/400x250.png?text=Site+Artisan" alt="Aperçu Site Artisan" class="vitrine-image">
+						<div class="vitrine-content">
+							<h3>Site Vitrine pour Artisan</h3>
+							<p>Création d'un site web moderne et responsive pour un artisan local, mettant en valeur ses services et réalisations.</p>
+							<a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link">Voir le site</a>
+						</div>
+					</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="vitrine-item">
+						<img src="https://via.placeholder.com/400x250.png?text=Site+Restaurant" alt="Aperçu Site Restaurant" class="vitrine-image">
+						<div class="vitrine-content">
+							<h3>Site Web pour Restaurant</h3>
+							<p>Développement d'un site avec menu en ligne, galerie photos et formulaire de réservation.</p>
+							<a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link">Voir le site</a>
+						</div>
+					</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="vitrine-item">
+						<img src="https://via.placeholder.com/400x250.png?text=Portfolio+Photographe" alt="Aperçu Portfolio Photographe" class="vitrine-image">
+						<div class="vitrine-content">
+							<h3>Portfolio en Ligne</h3>
+							<p>Mise en place d'un portfolio élégant pour un photographe, optimisé pour l'affichage d'images haute résolution.</p>
+							<a href="#" target="_blank" rel="noopener noreferrer" class="vitrine-link">Voir le site</a>
+						</div>
+					</article>
+				</div>
+				<div class="swiper-slide">
+					<article class="vitrine-item">
+						<img src="https://via.placeholder.com/400x250.png?text=Aperçu+Bolt+DIY+2" alt="Aperçu Projet Bolt DIY 2" class="vitrine-image">
+						<div class="vitrine-content">
+							<h3>Projet Bolt DIY 2</h3>
+							<p>Un exemple de site web interactif créé avec Bolt.</p>
+							<a href="https://bolt-diy-2-1746478852874.netlify.app/" target="_blank" rel="noopener noreferrer" class="vitrine-link">Voir le site</a>
+						</div>
+					</article>
+				</div>
+			</div>
+			<div class="swiper-pagination"></div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+		</div>
+	</section>
+
+	<section id="contact">
+		<h2>Contactez-nous</h2>
+		<p>
+			Pour toute demande d'information ou devis, n'hésitez pas à remplir le formulaire ci-dessous ou à nous contacter directement via les options ci-dessous. Nous serons ravis de discuter de votre projet.
+		</p>
+
+		<form class="contact-form" netlify>
+			<div class="form-group">
+				<label for="name">Nom :</label>
+				<input type="text" id="name" name="name" required />
+			</div>
+			<div class="form-group">
+				<label for="email">Email :</label>
+				<input type="email" id="email" name="email" required />
+			</div>
+			<div class="form-group">
+				<label for="subject">Sujet :</label>
+				<input type="text" id="subject" name="subject" required />
+			</div>
+			<div class="form-group">
+				<label for="message">Message :</label>
+				<textarea id="message" name="message" rows="5" required></textarea>
+			</div>
+			<button type="submit" class="submit-button">Envoyer le Message</button>
+		</form>
+
+		<div class="contact-buttons">
+			<p>Ou contactez-nous directement :</p>
+			<a href="tel:+33XXXXXXXXX" class="contact-button phone">
+				<span class="icon">📞</span> Téléphone
+			</a>
+			<a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" rel="noopener noreferrer" class="contact-button discord">
+				<span class="icon">💬</span> Discord
+			</a>
+			<a href="https://t.me/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" class="contact-button telegram">
+				<span class="icon">✈️</span> Telegram
+			</a>
+		</div>
+	</section>
+
+</Layout>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const swiper = new Swiper('.vitrine-swiper', {
+      modules: [Navigation, Pagination, EffectCoverflow],
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: true,
+      loop: true,
+      slidesPerView: 'auto',
+      coverflowEffect: {
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  });
+</script>
+
+
+<style>
+	.tagline {
+		text-align: center;
+		font-style: italic;
+		color: var(--text-color); /* Use CSS variable */
+		opacity: 0.8;
+		margin-bottom: 3rem;
+		transition: color 0.3s ease;
+	}
+
+	section {
+		margin-bottom: 3rem;
+		padding: 2rem;
+		border-bottom: none;
+		position: relative;
+		/* background-color: transparent; Removed, main has bg now */
+		border-radius: 8px;
+		transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	section:hover {
+		background-color: var(--section-hover-bg); /* Use CSS variable */
+		transform: translateY(-3px);
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+	}
+
+	section:not(:last-of-type)::after {
+		content: '';
+		position: absolute;
+		bottom: -1.5rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 80%;
+		max-width: 500px;
+		height: 2px;
+		background: linear-gradient(to right, transparent, var(--section-separator-color), transparent); /* Use CSS variable */
+		opacity: 0.5;
+		transition: opacity 0.3s ease, background 0.3s ease;
+	}
+
+	section:hover::after {
+		opacity: 0.3;
+	}
+
+	.section-image {
+		display: block;
+		max-width: 100%;
+		height: auto;
+		margin: 1.5rem auto;
+		border-radius: 8px;
+		opacity: 0.9;
+	}
+
+	.cta-section h2 {
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+	.services-intro {
+		text-align: center;
+		color: var(--text-color); /* Use CSS variable */
+		opacity: 0.9;
+		margin-bottom: 2.5rem;
+		max-width: 60ch;
+		margin-left: auto;
+		margin-right: auto;
+		transition: color 0.3s ease;
+	}
+	.service-cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+	.service-card {
+		background-color: var(--card-bg-color); /* Use CSS variable */
+		padding: 0;
+		border-radius: 8px;
+		display: flex;
+		flex-direction: column;
+		transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease;
+		overflow: hidden;
+		border: 1px solid var(--border-color); /* Add subtle border */
+	}
+	.service-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+	}
+	.service-card-image {
+		width: 100%;
+		height: 150px;
+		object-fit: cover;
+		display: block;
+	}
+	.service-card h3 {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		margin-top: 0;
+		color: var(--heading-color); /* Use CSS variable */
+		padding: 1rem 1.5rem 0 1.5rem;
+	}
+	.service-card p {
+		flex-grow: 1;
+		margin-bottom: 1rem;
+		color: var(--card-text-color); /* Use CSS variable */
+		padding: 0 1.5rem;
+		transition: color 0.3s ease;
+	}
+	.service-card ul {
+		font-size: 0.9em;
+		margin-bottom: 1.5rem;
+		padding: 0 1.5rem 0 2.7rem;
+		flex-grow: 1;
+		color: var(--card-text-color); /* Use CSS variable */
+		transition: color 0.3s ease;
+	}
+	.service-card li {
+		margin-bottom: 0.4rem;
+	}
+	.cta-button {
+		display: block;
+		background-color: var(--button-bg-color); /* Use CSS variable */
+		color: var(--button-text-color); /* Use CSS variable */
+		padding: 0.7rem 1.2rem;
+		border-radius: 5px;
+		text-decoration: none;
+		text-align: center;
+		font-weight: bold;
+		transition: background-color 0.2s ease, color 0.3s ease;
+		margin: 1.5rem; /* Keep margin consistent */
+	}
+	.cta-button:hover {
+		background-color: var(--button-hover-bg-color); /* Use CSS variable */
+	}
+
+	.icon-repair::before,
+	.icon-web::before,
+	.icon-stream::before,
+	.icon-ai::before {
+		content: '⚙️';
+		display: inline-block;
+		font-size: 1.5em;
+		color: var(--link-color); /* Use link color for icons, or a specific icon color variable */
+		transition: color 0.3s ease;
+	}
+	.icon-web::before { content: '🌐'; }
+	.icon-stream::before { content: '🎬'; }
+	.icon-ai::before { content: '🧠'; }
+
+	.map-section h2,
+	.map-section p:first-of-type {
+		text-align: center;
+	}
+	.map-container {
+		margin-top: 1.5rem;
+		text-align: center;
+	}
+	.map-container iframe {
+		max-width: 100%;
+		filter: grayscale(var(--map-grayscale, 30%)) contrast(var(--map-contrast, 90%)); /* Allow theme override */
+		opacity: 0.9;
+		border-radius: 8px;
+		border: 1px solid var(--border-color);
+		transition: filter 0.3s ease, border-color 0.3s ease;
+	}
+	html.dark .map-container iframe {
+		--map-grayscale: 10%; /* Less grayscale in dark mode */
+		--map-contrast: 100%;
+	}
+	.map-container small {
+		display: block;
+		margin-top: 0.5rem;
+		font-size: 0.85em;
+		color: var(--text-color);
+		opacity: 0.7;
+		transition: color 0.3s ease;
+	}
+	.map-container small a {
+		color: var(--link-color);
+		text-decoration: underline;
+	}
+	.map-container small a:hover {
+		color: var(--accent-dark);
+	}
+	html.dark .map-container small a:hover {
+		color: white;
+	}
+
+
+	#vitrine h2 {
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+	.vitrine-intro {
+		text-align: center;
+		color: var(--text-color);
+		opacity: 0.9;
+		margin-bottom: 2.5rem;
+		max-width: 60ch;
+		margin-left: auto;
+		margin-right: auto;
+		transition: color 0.3s ease;
+	}
+	.vitrine-swiper {
+		width: 100%;
+		padding-top: 20px;
+		padding-bottom: 50px;
+		position: relative;
+	}
+	.swiper-slide {
+		background-position: center;
+		background-size: cover;
+		width: 60%;
+		max-width: 400px;
+		overflow: hidden;
+		border-radius: 8px;
+	}
+	.swiper-slide:not(.swiper-slide-active) {
+		opacity: 0.7;
+	}
+	.swiper-slide .vitrine-item {
+		background-color: var(--card-bg-color); /* Use CSS variable */
+		border-radius: 8px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		margin: 0 auto;
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+		height: 100%;
+		border: 1px solid var(--border-color); /* Add subtle border */
+	}
+	.swiper-slide:hover .vitrine-item {
+		transform: scale(1.02);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+	}
+	.vitrine-image {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		display: block;
+		border-bottom: 3px solid var(--link-color); /* Use CSS variable */
+		transition: border-color 0.3s ease;
+	}
+	.vitrine-content {
+		padding: 1.5rem;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 150px;
+	}
+	.vitrine-content h3 {
+		margin-top: 0;
+		color: var(--heading-color); /* Use CSS variable */
+		margin-bottom: 0.75rem;
+	}
+	.vitrine-content p {
+		color: var(--card-text-color); /* Use CSS variable */
+		flex-grow: 1;
+		margin-bottom: 1rem;
+		transition: color 0.3s ease;
+	}
+	.vitrine-link {
+		display: inline-block;
+		background-color: transparent;
+		color: var(--link-color); /* Use CSS variable */
+		padding: 0.5rem 0;
+		border-radius: 4px;
+		text-decoration: none;
+		font-weight: bold;
+		transition: color 0.2s ease, background-color 0.2s ease, border-color 0.3s ease;
+		margin-top: auto;
+		border: 1px solid var(--link-color); /* Use CSS variable */
+		text-align: center;
+		max-width: 150px;
+	}
+	.vitrine-link:hover {
+		background-color: rgba(var(--accent), 0.2); /* Keep accent for hover */
+		color: var(--accent-dark);
+	}
+	html.dark .vitrine-link:hover {
+		background-color: rgba(var(--accent-light), 0.2);
+		color: white;
+	}
+
+	.swiper-pagination-bullet {
+		background-color: var(--text-color); /* Use CSS variable */
+		opacity: 0.5;
+		transition: background-color 0.3s ease;
+	}
+	.swiper-pagination-bullet-active {
+		background-color: var(--link-color); /* Use CSS variable */
+		opacity: 1;
+	}
+	.swiper-button-prev,
+	.swiper-button-next {
+		color: var(--link-color); /* Use CSS variable */
+		background-color: rgba(var(--card-bg-color-rgb, 35, 38, 45), 0.5); /* Use card bg with opacity */
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		transition: background-color 0.2s ease, color 0.3s ease;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	html.light .swiper-button-prev,
+	html.light .swiper-button-next {
+		/* Ensure card-bg-color-rgb is defined for light theme or use a fallback */
+		background-color: rgba(255, 255, 255, 0.5); /* Example for light theme */
+	}
+	.swiper-button-prev:hover,
+	.swiper-button-next:hover {
+		background-color: rgba(var(--card-bg-color-rgb, 35, 38, 45), 0.8);
+	}
+	html.light .swiper-button-prev:hover,
+	html.light .swiper-button-next:hover {
+		background-color: rgba(255, 255, 255, 0.8); /* Example for light theme */
+	}
+	.swiper-button-prev::after,
+	.swiper-button-next::after {
+		font-size: 1.2rem;
+		font-weight: bold;
+	}
+	.swiper-button-prev { left: 10px; }
+	.swiper-button-next { right: 10px; }
+
+
+	#contact h2 {
+		text-align: center;
+	}
+	#contact > p:first-of-type {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
+	.contact-form {
+		background-color: var(--card-bg-color); /* Use CSS variable */
+		padding: 2rem;
+		border-radius: 8px;
+		max-width: 600px;
+		margin: 0 auto 2rem auto;
+		box-sizing: border-box;
+		transition: box-shadow 0.3s ease, background-color 0.3s ease;
+		border: 1px solid var(--border-color); /* Add subtle border */
+	}
+	.contact-form:hover {
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+	}
+	.form-group {
+		margin-bottom: 1.5rem;
+	}
+	.form-group label {
+		display: block;
+		margin-bottom: 0.5rem;
+		color: var(--text-color); /* Use CSS variable */
+		font-weight: bold;
+		transition: color 0.3s ease;
+	}
+	.form-group input,
+	.form-group textarea {
+		width: 100%;
+		padding: 0.8rem;
+		border: 1px solid var(--input-border-color); /* Use CSS variable */
+		background-color: var(--input-bg-color); /* Use CSS variable */
+		color: var(--input-text-color); /* Use CSS variable */
+		border-radius: 4px;
+		font-size: 1rem;
+		box-sizing: border-box;
+		transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+	}
+	.form-group input:focus,
+	.form-group textarea:focus {
+		outline: none;
+		border-color: var(--input-focus-border-color); /* Use CSS variable */
+		box-shadow: 0 0 0 2px var(--input-focus-shadow-color); /* Use CSS variable */
+	}
+	.submit-button {
+		display: block;
+		width: 100%;
+		padding: 0.9rem 1.5rem;
+		background-color: var(--button-bg-color); /* Use CSS variable */
+		color: var(--button-text-color); /* Use CSS variable */
+		border: none;
+		border-radius: 5px;
+		font-size: 1.1rem;
+		font-weight: bold;
+		cursor: pointer;
+		transition: background-color 0.2s ease, color 0.3s ease;
+	}
+	.submit-button:hover {
+		background-color: var(--button-hover-bg-color); /* Use CSS variable */
+	}
+
+	.contact-buttons {
+		text-align: center;
+		margin-top: 2.5rem;
+	}
+	.contact-buttons p {
+		margin-bottom: 1rem;
+		color: var(--text-color);
+		opacity: 0.8;
+		transition: color 0.3s ease;
+	}
+	.contact-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		background-color: var(--contact-button-bg); /* Use CSS variable */
+		color: var(--contact-button-text); /* Use CSS variable */
+		padding: 0.8rem 1.5rem;
+		border-radius: 5px;
+		text-decoration: none;
+		font-weight: bold;
+		margin: 0.5rem;
+		transition: background-color 0.2s ease, transform 0.1s ease, color 0.3s ease, border-color 0.3s ease;
+		border: 1px solid var(--contact-button-border); /* Use CSS variable */
+		min-width: 150px;
+	}
+	.contact-button:hover {
+		background-color: var(--contact-button-hover-bg); /* Use CSS variable */
+		transform: translateY(-2px);
+	}
+	.contact-button .icon {
+		font-size: 1.2em;
+		display: inline-block;
+	}
+	/* Specific button colors can be overridden or kept if desired */
+	.contact-button.phone { background-color: #4CAF50; border-color: #388E3C; color: white; }
+	.contact-button.phone:hover { background-color: #66BB6A; }
+	.contact-button.discord { background-color: #5865F2; border-color: #4650c1; color: white; }
+	.contact-button.discord:hover { background-color: #707bf3; }
+	.contact-button.telegram { background-color: #0088cc; border-color: #006da3; color: white; }
+	.contact-button.telegram:hover { background-color: #33aadd; }
+
+	/* Ensure specific button colors adapt if they are meant to be themed */
+	html.light .contact-button.phone { /* Adjust if needed for light theme */ }
+	html.light .contact-button.discord { /* Adjust if needed for light theme */ }
+	html.light .contact-button.telegram { /* Adjust if needed for light theme */ }
+
+
+	@media (max-width: 768px) {
+		.swiper-slide { width: 70%; }
+	}
+
+	@media (max-width: 640px) {
+		section { padding: 1.5rem; }
+		.swiper-slide { width: 80%; }
+		.vitrine-image { height: 180px; }
+		.vitrine-content { padding: 1rem; min-height: 120px; }
+		.vitrine-link { max-width: none; width: 100%; padding: 0.7rem 1rem; }
+		.swiper-button-prev, .swiper-button-next { width: 35px; height: 35px; }
+		.swiper-button-prev::after, .swiper-button-next::after { font-size: 1rem; }
+		.swiper-button-prev { left: 5px; }
+		.swiper-button-next { right: 5px; }
+		.contact-form { padding: 1.5rem; }
+		.contact-buttons { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+		.contact-button { width: 80%; max-width: 300px; margin: 0; padding: 0.9rem 1rem; }
+		.map-container iframe { height: 250px; }
+	}
+</style>

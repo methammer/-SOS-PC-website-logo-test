@@ -1,0 +1,228 @@
+---
+// src/components/Navbar.astro
+import ThemeSwitcher from './ThemeSwitcher.astro';
+
+const logoPath = "/SOS-PC%20LOGO.png"; // Updated logo path
+const siteTitle = "SOS-PC";
+---
+
+<nav class="navbar">
+  <div class="navbar-container">
+    <a href="/" class="navbar-logo">
+      <img src={logoPath} alt="SOS-PC Company Logo" width="30" height="30" /> {/* Updated alt text and potentially dimensions if needed */}
+      <span>{siteTitle}</span>
+    </a>
+
+    <button id="navbar-menu-toggle-button" class="navbar-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
+      <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display: none;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+    </button>
+
+    <div id="navbar-collapsible-content" class="navbar-collapsible-content">
+      <div class="navbar-links">
+        <a href="/">Accueil</a>
+        <a href="/#services">Services</a>
+        <a href="/#contact">Contact</a>
+        <!-- Add more links as needed -->
+      </div>
+      <ThemeSwitcher />
+    </div>
+  </div>
+</nav>
+
+<script>
+  // src/components/Navbar.astro <script>
+  const menuToggleButton = document.getElementById('navbar-menu-toggle-button');
+  const collapsibleContent = document.getElementById('navbar-collapsible-content');
+  const thresholdWidth = 768; // Breakpoint for showing/hiding menu toggle button
+  
+  if (menuToggleButton && collapsibleContent) {
+    const hamburgerIcon = menuToggleButton.querySelector('.hamburger-icon');
+    const closeIcon = menuToggleButton.querySelector('.close-icon');
+
+    function updateMenuVisualState(isOpen) {
+      collapsibleContent.classList.toggle('is-open', isOpen);
+      menuToggleButton.setAttribute('aria-expanded', isOpen.toString());
+      if (hamburgerIcon) hamburgerIcon.style.display = isOpen ? 'none' : 'block';
+      if (closeIcon) closeIcon.style.display = isOpen ? 'block' : 'none';
+    }
+
+    function handleMenuToggleClick() {
+      const isOpen = collapsibleContent.classList.contains('is-open');
+      updateMenuVisualState(!isOpen);
+    }
+
+    function handleMenuLinkClick() {
+      if (collapsibleContent.classList.contains('is-open')) {
+        updateMenuVisualState(false);
+      }
+    }
+
+    menuToggleButton.addEventListener('click', handleMenuToggleClick);
+    
+    const links = collapsibleContent.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', handleMenuLinkClick);
+    });
+
+    function manageMenuButtonVisibilityAndState() {
+      const isOpen = collapsibleContent.classList.contains('is-open');
+
+      if (window.innerWidth <= thresholdWidth) {
+        menuToggleButton.style.display = 'flex';
+        // Ensure icons are correct based on current menu state
+        if (hamburgerIcon) hamburgerIcon.style.display = isOpen ? 'none' : 'block';
+        if (closeIcon) closeIcon.style.display = isOpen ? 'block' : 'none';
+      } else {
+        menuToggleButton.style.display = 'none';
+        // If button is hidden (larger screen), ensure menu is closed
+        if (isOpen) {
+          updateMenuVisualState(false);
+        }
+      }
+    }
+
+    // Initial check on load
+    manageMenuButtonVisibilityAndState();
+
+    // Listen for window resize events
+    window.addEventListener('resize', manageMenuButtonVisibilityAndState);
+
+  } else {
+    console.error('Navbar menu elements not found. Mobile menu script not fully initialized.');
+  }
+</script>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--navbar-bg-color, rgba(35, 38, 45, 0.9));
+    backdrop-filter: blur(5px);
+    padding: 0.8rem 1.5rem;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--navbar-border-color, #444);
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap; 
+  }
+
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-color, white);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: color 0.3s ease;
+  }
+
+  .navbar-logo img {
+    display: block;
+    /* You might need to adjust width/height or add object-fit if the new logo's aspect ratio is different */
+    /* object-fit: contain; */ 
+  }
+
+  .navbar-menu-toggle {
+    display: none; /* Initially hidden; JS will manage visibility to 'flex' or 'none' */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    /* align-items, justify-content, order are set in media query for when it's visible */
+  }
+
+  .navbar-menu-toggle svg {
+    width: 24px;
+    height: 24px;
+    display: block; 
+  }
+
+  .navbar-collapsible-content {
+    display: flex; 
+    align-items: center;
+    gap: 1rem; 
+  }
+
+  .navbar-links {
+    display: flex; 
+    gap: 0.5rem 1.5rem; 
+  }
+
+  .navbar-links a {
+    color: var(--navbar-link-color, #e0e0e0);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    padding: 0.2rem 0;
+  }
+
+  .navbar-links a:hover {
+    color: var(--accent-light);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .navbar-menu-toggle {
+      /* display: flex; <-- This is now controlled by JavaScript */
+      /* Properties for when JS makes it visible on small screens */
+      align-items: center; 
+      justify-content: center;
+      order: 1; 
+    }
+
+    .navbar-collapsible-content {
+      width: 100%;
+      order: 2; 
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+      flex-direction: column; 
+      align-items: center; 
+      gap: 0; 
+      padding: 0 1rem; 
+    }
+
+    .navbar-collapsible-content.is-open {
+      max-height: 70vh; 
+      padding: 1rem 1rem 1.5rem; 
+      border-top: 1px solid var(--navbar-border-color, #444);
+      margin-top: 0.8rem;
+    }
+
+    .navbar-links {
+      flex-direction: column; 
+      align-items: center; 
+      width: 100%;
+      gap: 0.8rem; 
+      margin-bottom: 1rem; 
+    }
+
+    .navbar-links a {
+      padding: 0.5rem 0; 
+      width: 100%;
+      text-align: center;
+      border-radius: 4px;
+    }
+    .navbar-links a:hover {
+      background-color: rgba(128,128,128,0.1); 
+    }
+
+    .navbar-collapsible-content > :global(.theme-switcher-wrapper) { 
+      margin-top: 0.5rem;
+    }
+  }
+</style>
