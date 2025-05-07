@@ -5,7 +5,7 @@ import ThemeSwitcher from './ThemeSwitcher.astro';
 const navLinks = [
   { href: "/", text: "Accueil", id: "home" },
   { href: "/#services", text: "Services", id: "services" },
-  { href: "/#portfolio", text: "Portfolio", id: "portfolio" },
+  { href: "#vitrine", text: "Portfolio", id: "vitrine" }, // Reverted to intended values
   { href: "/#contact", text: "Contact", id: "contact" },
 ];
 
@@ -364,11 +364,29 @@ const siteTitle = "SOS-PC";
       
       navLinkElements.forEach(link => {
         const linkHref = link.getAttribute('href');
-        const normalizedCurrentPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
-        const normalizedLinkHref = linkHref.endsWith('/') && linkHref.length > 1 ? linkHref.slice(0, -1) : linkHref;
+        // For same-page hash links (e.g., #vitrine), ensure they are correctly matched
+        // when the pathname is / and hash is present.
+        let normalizedLinkHref = linkHref;
+        if (linkHref.startsWith('#') && currentPath.startsWith('/')) {
+           // Prepend current pathname if it's just a hash, to match against currentPath
+           // Or, more simply, if linkHref is just a hash, compare it with window.location.hash
+        }
 
-        if (normalizedLinkHref === normalizedCurrentPath || 
-            (normalizedLinkHref === "/" && (normalizedCurrentPath === "/index.html" || normalizedCurrentPath === ""))) {
+
+        const normalizedCurrentPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
+        normalizedLinkHref = linkHref.endsWith('/') && linkHref.length > 1 ? linkHref.slice(0, -1) : linkHref;
+        
+        // Handle matching for root path and hash links correctly
+        let isActive = false;
+        if (linkHref.startsWith('#')) { // For links like #vitrine
+            isActive = window.location.hash === linkHref && (normalizedCurrentPath === '/' || normalizedCurrentPath === '' || normalizedCurrentPath === '/index.html');
+        } else { // For links like /#services or /
+            isActive = normalizedLinkHref === normalizedCurrentPath || 
+                       (normalizedLinkHref === "/" && (normalizedCurrentPath === "/index.html" || normalizedCurrentPath === ""));
+        }
+
+
+        if (isActive) {
           link.classList.add('active');
         } else {
           link.classList.remove('active');
