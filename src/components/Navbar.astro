@@ -14,10 +14,12 @@ const siteTitle = "SOS-PC";
 ---
 <nav id="main-navbar" aria-label="Navigation principale">
   <div class="nav-container">
-    <a href="/" class="logo-container" aria-label={`Retour à la page d'accueil de ${siteTitle}`}>
+    <div class="logo-container">
       <img src="/logo.png" alt={`${siteTitle} Logo`} id="navbar-logo" />
-      <span class="logo-text">{siteTitle}</span>
-    </a>
+      <a href="/" class="logo-text-anchor" aria-label={`Retour à la page d'accueil de ${siteTitle}`}>
+        <span class="logo-text">{siteTitle}</span>
+      </a>
+    </div>
     
     <button class="hamburger-menu" aria-label="Ouvrir le menu de navigation" aria-expanded="false" aria-controls="nav-links-list">
       <span class="hamburger-icon"></span>
@@ -65,27 +67,38 @@ const siteTitle = "SOS-PC";
     margin: 0 auto;
   }
 
-  .logo-container {
+  .logo-container { /* Changed from <a> to <div> */
     display: flex;
     align-items: center;
-    text-decoration: none;
-    color: var(--text-color);
   }
 
   #navbar-logo {
     height: calc(var(--navbar-internal-height) - 30px);
     max-height: 50px;
     width: auto;
-    cursor: pointer;
+    cursor: pointer; /* For bounce animation */
     margin-right: 10px;
     transition: transform 0.3s ease;
   }
   
+  .logo-text-anchor {
+    text-decoration: none;
+    display: inline-flex; /* Aligns inner content if any, and behaves well in flex parent */
+    align-items: center;
+  }
+
   .logo-text {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     font-weight: bold;
     color: var(--heading-color);
     transition: color 0.3s ease;
+  }
+
+  .logo-text-anchor:hover .logo-text {
+    color: var(--accent);
+  }
+  html.dark .logo-text-anchor:hover .logo-text {
+    color: rgb(var(--accent-light));
   }
 
   #navbar-logo.bounce {
@@ -266,7 +279,11 @@ const siteTitle = "SOS-PC";
   }
 
   @media (max-width: 480px) {
-    .logo-text {
+    .logo-text-anchor { /* Ensure text link is not hidden, only the span inside if needed */
+      /* If .logo-text is display:none, the link would be empty. */
+      /* This media query targets .logo-text specifically */
+    }
+    .logo-text { /* This hides the text on small screens */
       display: none; 
     }
     .nav-links a {
@@ -282,7 +299,7 @@ const siteTitle = "SOS-PC";
   function initializeNavbar() {
     console.log('DOMContentLoaded event fired. Initializing navbar script.');
 
-    const logoElement = document.getElementById('navbar-logo');
+    const logoElement = document.getElementById('navbar-logo'); // This is the <img> tag
     const hamburgerButton = document.querySelector('.hamburger-menu');
     const navLinksList = document.getElementById('nav-links-list');
 
