@@ -279,12 +279,13 @@ const siteTitle = "SOS-PC";
   }
 
   @media (max-width: 480px) {
-    .logo-text-anchor { /* Ensure text link is not hidden, only the span inside if needed */
-      /* If .logo-text is display:none, the link would be empty. */
-      /* This media query targets .logo-text specifically */
+    .logo-text-anchor { 
+      /* Styles for the anchor if needed on small screens */
     }
-    .logo-text { /* This hides the text on small screens */
-      display: none; 
+    .logo-text { 
+      /* display: none;  <- This line was removed */
+      /* You might want to adjust font-size or other properties here if needed */
+      font-size: clamp(1rem, 2.5vw, 1.2rem); /* Example: slightly smaller font */
     }
     .nav-links a {
         font-size: 1rem;
