@@ -11,16 +11,22 @@
     width: 100%;
     height: 100%;
     z-index: 0;
-    opacity: 0.15; /* Adjusted for potentially brighter characters */
+    opacity: 0.15; /* Suggestion: Temporarily increase to 0.5 or 1.0 for debugging the effect */
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('ascii-background-canvas') as HTMLCanvasElement;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error("AsciiBackground: Canvas element not found.");
+      return;
+    }
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.error("AsciiBackground: Could not get 2D context.");
+      return;
+    }
 
     // --- Configuration ---
     const charSet = ['.', ':', '-', '|', '*', '+', '~'];
@@ -29,11 +35,11 @@
     const changeProbability = 0.02;
 
     const lightThemeAsciiColors = ['#6c757d', '#5a6268', '#495057', '#343a40', '#212529'];
-    const darkThemeAsciiColors = ['#E0E0E0', '#BDBDBD', '#EEEEEE', '#F5F5F5', '#E8EAF6'];
+    // Adjusted for better contrast with brightening effect in dark mode
+    const darkThemeAsciiColors = ['#707070', '#888888', '#909090', '#A0A0A0', '#B0B0B0']; 
     
-    // Mouse effect configuration
     const mouseEffectRadius = 150; // Pixels
-    const maxBrightnessIncrease = 0.8; // 0 to 1, how much to brighten towards white
+    const maxBrightnessIncrease = 0.9; // Increased slightly for more impact
 
     let currentAsciiColors: string[] = [];
     let dpr = window.devicePixelRatio || 1;
@@ -43,8 +49,9 @@
     let grid: { char: string; color: string }[][] = [];
     
     let lastCharUpdateTime = 0;
-    let mouseX = -Infinity; // Initialize mouse position off-screen
+    let mouseX = -Infinity; 
     let mouseY = -Infinity;
+    let hasLoggedEffect = false; // To prevent console flooding
 
     // --- Helper Functions for Color Manipulation ---
     function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -63,21 +70,18 @@
     function brightenColor(hexColor: string, factor: number): string {
       const rgb = hexToRgb(hexColor);
       if (!rgb) return hexColor;
-
-      // Increase brightness: move each component towards 255
-      // Clamp factor between 0 and 1
       const clampedFactor = Math.max(0, Math.min(1, factor));
-
       const r = Math.min(255, Math.round(rgb.r + (255 - rgb.r) * clampedFactor));
       const g = Math.min(255, Math.round(rgb.g + (255 - rgb.g) * clampedFactor));
       const b = Math.min(255, Math.round(rgb.b + (255 - rgb.b) * clampedFactor));
-      
       return rgbToHex(r, g, b);
     }
 
     // --- Core Logic ---
     function updateThemeColors() {
-      if (document.documentElement.classList.contains('dark')) {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      // console.log("AsciiBackground: Updating theme. Dark mode:", isDarkMode);
+      if (isDarkMode) {
         currentAsciiColors = darkThemeAsciiColors;
       } else {
         currentAsciiColors = lightThemeAsciiColors;
@@ -85,6 +89,15 @@
     }
 
     function initializeGridData() {
+      if (currentAsciiColors.length === 0) {
+        // console.warn("AsciiBackground: currentAsciiColors is empty during grid initialization. Forcing theme update.");
+        updateThemeColors(); // Ensure colors are loaded
+      }
+      if (currentAsciiColors.length === 0) {
+        // console.error("AsciiBackground: currentAsciiColors is still empty. Cannot initialize grid.");
+        return; // Prevent errors if colors still not loaded
+      }
+
       cols = Math.ceil(window.innerWidth / baseFontSize);
       rows = Math.ceil(window.innerHeight / baseFontSize);
 
@@ -98,6 +111,7 @@
           };
         }
       }
+      // console.log(`AsciiBackground: Grid initialized (${cols}x${rows})`);
     }
 
     function setupCanvas() {
@@ -117,37 +131,51 @@
 
     function draw() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      if (!grid || grid.length === 0) return; // Don't draw if grid not ready
+
+      let effectAppliedThisFrame = false;
 
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
+          if (!grid[y] || !grid[y][x]) continue; // Cell might not exist if resizing
           const cell = grid[y][x];
-          if (cell) {
-            const charX = x * baseFontSize + baseFontSize / 2; // Center of the character cell
-            const charY = y * baseFontSize + baseFontSize / 2;
-            
-            const distanceToMouse = Math.sqrt(Math.pow(charX - mouseX, 2) + Math.pow(charY - mouseY, 2));
-            let displayColor = cell.color;
+          
+          const charX = x * baseFontSize + baseFontSize / 2;
+          const charY = y * baseFontSize + baseFontSize / 2;
+          
+          const distanceToMouse = Math.sqrt(Math.pow(charX - mouseX, 2) + Math.pow(charY - mouseY, 2));
+          let displayColor = cell.color;
 
-            if (distanceToMouse < mouseEffectRadius) {
-              const intensity = 1 - (distanceToMouse / mouseEffectRadius); // 1 at center, 0 at edge
-              const brightnessFactor = intensity * maxBrightnessIncrease;
-              displayColor = brightenColor(cell.color, brightnessFactor);
+          if (distanceToMouse < mouseEffectRadius) {
+            const intensity = 1 - (distanceToMouse / mouseEffectRadius);
+            const brightnessFactor = intensity * maxBrightnessIncrease;
+            const originalColor = cell.color;
+            displayColor = brightenColor(originalColor, brightnessFactor);
+            effectAppliedThisFrame = true;
+
+            if (!hasLoggedEffect && displayColor !== originalColor) {
+              // console.log(`AsciiBackground: Effect triggered! Pos:(${charX.toFixed(0)},${charY.toFixed(0)}), Dist: ${distanceToMouse.toFixed(0)}, Factor: ${brightnessFactor.toFixed(2)}, Original: ${originalColor}, New: ${displayColor}`);
+              hasLoggedEffect = true; // Log once per interaction burst
+              setTimeout(() => { hasLoggedEffect = false; }, 500); // Reset log flag
             }
-            
-            ctx.fillStyle = displayColor;
-            ctx.fillText(cell.char, x * baseFontSize, y * baseFontSize);
           }
+          
+          ctx.fillStyle = displayColor;
+          ctx.fillText(cell.char, x * baseFontSize, y * baseFontSize);
         }
       }
+      // if (effectAppliedThisFrame) console.log("AsciiBackground: Mouse effect applied in this frame.");
     }
 
     function updateCharacterGridContent() {
+       if (!grid || grid.length === 0) return;
        for (let y = 0; y < rows; y++) {
          for (let x = 0; x < cols; x++) {
            if (grid[y] && grid[y][x] && Math.random() < changeProbability) { 
               grid[y][x].char = charSet[Math.floor(Math.random() * charSet.length)];
-              // Only update base color here, mouse effect is applied during draw
-              grid[y][x].color = currentAsciiColors[Math.floor(Math.random() * currentAsciiColors.length)];
+              if (currentAsciiColors.length > 0) {
+                grid[y][x].color = currentAsciiColors[Math.floor(Math.random() * currentAsciiColors.length)];
+              }
            }
          }
        }
@@ -168,21 +196,22 @@
     window.addEventListener('mousemove', (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
+      // console.log(`AsciiBackground: Mouse move: ${mouseX}, ${mouseY}`); // Uncomment for verbose mouse tracking
     });
     
-    // Optional: Reset mouse position when it leaves the window to avoid lingering effect
     window.addEventListener('mouseout', () => {
       mouseX = -Infinity;
       mouseY = -Infinity;
     });
 
-
-    setupCanvas();
+    // --- Initialization ---
+    setupCanvas(); // Initial setup
 
     let resizeTimeout: number;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = window.setTimeout(() => {
+        // console.log("AsciiBackground: Resizing canvas...");
         setupCanvas();
       }, 250);
     });
@@ -190,10 +219,12 @@
     const themeObserver = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          // console.log("AsciiBackground: Theme changed via class attribute.");
           const previousColorsString = JSON.stringify(currentAsciiColors);
           updateThemeColors();
           if (JSON.stringify(currentAsciiColors) !== previousColorsString) {
-            setupCanvas(); 
+            // console.log("AsciiBackground: ASCII colors changed, re-initializing canvas & grid.");
+            initializeGridData(); // Re-initialize grid with new colors, but don't rescale canvas unless size changed
           }
           break;
         }
@@ -203,5 +234,6 @@
     themeObserver.observe(document.documentElement, { attributes: true });
 
     requestAnimationFrame(animate);
+    // console.log("AsciiBackground: Script initialized and animation started.");
   });
 </script>
