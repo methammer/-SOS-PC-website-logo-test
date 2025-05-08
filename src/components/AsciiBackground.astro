@@ -34,11 +34,12 @@
     const updateInterval = 200;
     const changeProbability = 0.02;
 
-    const lightThemeAsciiColors = ['#6c757d', '#5a6268', '#495057', '#343a40', '#212529'];
-    const darkThemeAsciiColors = ['#707070', '#888888', '#909090', '#A0A0A0', '#B0B0B0']; 
+    // Darker base colors
+    const lightThemeAsciiColors = ['#52585d', '#4a5055', '#3f454a', '#2e3236', '#1c1f22']; // Darkened
+    const darkThemeAsciiColors = ['#303030', '#383838', '#404040', '#484848', '#505050']; // Significantly Darkened
     
     const mouseEffectRadius = 150; // Pixels
-    const maxBrightnessIncrease = 0.99; // Increased for maximum impact
+    const maxBrightnessIncrease = 0.99; 
 
     let currentAsciiColors: string[] = [];
     let dpr = window.devicePixelRatio || 1;
@@ -140,9 +141,8 @@
           let displayColor = cell.color;
 
           if (distanceToMouse < mouseEffectRadius) {
-            // Apply a non-linear falloff for intensity (stronger effect closer to the mouse)
             const proximityFactor = 1 - (distanceToMouse / mouseEffectRadius);
-            const intensity = Math.pow(proximityFactor, 2); // Squaring makes it ramp up faster
+            const intensity = Math.pow(proximityFactor, 2); 
             
             const brightnessFactor = intensity * maxBrightnessIncrease;
             const originalColor = cell.color;
