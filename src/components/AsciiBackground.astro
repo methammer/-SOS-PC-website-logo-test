@@ -34,7 +34,8 @@
     const updateInterval = 200;
     const changeProbability = 0.02;
 
-    const lightThemeAsciiColors = ['#52585d', '#4a5055', '#3f454a', '#2e3236', '#1c1f22'];
+    // Adjusted lightThemeAsciiColors to be lighter
+    const lightThemeAsciiColors = ['#909090', '#A0A0A0', '#B0B0B0', '#C0C0C0', '#D0D0D0'];
     const darkThemeAsciiColors = ['#303030', '#383838', '#404040', '#484848', '#505050'];
     
     const mouseEffectRadius = 150; // Pixels
@@ -102,6 +103,7 @@
         updateThemeColors(); 
       }
       if (currentAsciiColors.length === 0) {
+        console.warn("AsciiBackground: currentAsciiColors is empty after updateThemeColors.");
         return; 
       }
 
@@ -166,6 +168,7 @@
             }
 
             if (!hasLoggedEffect && displayColor !== originalColor) {
+              // Uncomment for debugging color changes
               // console.log(`AsciiBackground: Effect! Theme: ${isDarkMode ? 'Dark' : 'Light'}, Dist: ${distanceToMouse.toFixed(0)}, ProxFactor: ${proximityFactor.toFixed(2)}, Intensity: ${intensity.toFixed(2)}, Orig: ${originalColor}, New: ${displayColor}`);
               hasLoggedEffect = true; 
               setTimeout(() => { hasLoggedEffect = false; }, 500);
@@ -229,12 +232,10 @@
       for (const mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
           const previousColorsString = JSON.stringify(currentAsciiColors);
-          updateThemeColors(); // This will update currentAsciiColors
-          // Re-initialize grid only if the base color set actually changes
+          updateThemeColors(); 
           if (JSON.stringify(currentAsciiColors) !== previousColorsString) {
             initializeGridData(); 
           }
-          // No need to redraw here, draw() is called by animate loop
           break;
         }
       }
