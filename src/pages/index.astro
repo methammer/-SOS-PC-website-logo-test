@@ -253,14 +253,18 @@ import 'swiper/css/effect-coverflow';
 		position: relative;
 		/* background-color: transparent; Removed, main has bg now */
 		border-radius: 8px;
-		transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+		/* Removed transition for hover effects */
+		/* transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; */
 	}
 
+	/* REMOVED section:hover styles */
+	/*
 	section:hover {
-		background-color: var(--section-hover-bg); /* Use CSS variable */
+		background-color: var(--section-hover-bg); 
 		transform: translateY(-3px);
 		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 	}
+	*/
 
 	section:not(:last-of-type)::after {
 		content: '';
@@ -276,9 +280,12 @@ import 'swiper/css/effect-coverflow';
 		transition: opacity 0.3s ease, background 0.3s ease;
 	}
 
+	/* REMOVED section:hover::after styles */
+	/*
 	section:hover::after {
 		opacity: 0.3;
 	}
+	*/
 
 	.section-image {
 		display: block;
@@ -314,14 +321,19 @@ import 'swiper/css/effect-coverflow';
 		border-radius: 8px;
 		display: flex;
 		flex-direction: column;
-		transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease;
+		/* Removed transition for hover effects */
+		/* transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease; */
+		transition: background-color 0.3s ease; /* Keep background color transition */
 		overflow: hidden;
 		border: 1px solid var(--border-color); /* Add subtle border */
 	}
+	/* REMOVED .service-card:hover styles */
+	/*
 	.service-card:hover {
 		transform: translateY(-5px);
 		box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 	}
+	*/
 	.service-card-image {
 		width: 100%;
 		height: 150px;
@@ -464,14 +476,19 @@ import 'swiper/css/effect-coverflow';
 		width: 100%;
 		margin: 0 auto;
 		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-		transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+		/* Removed transition for hover effects */
+		/* transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; */
+		transition: background-color 0.3s ease; /* Keep background color transition */
 		height: 100%;
 		border: 1px solid var(--border-color); /* Add subtle border */
 	}
+	/* REMOVED .swiper-slide:hover .vitrine-item styles */
+	/*
 	.swiper-slide:hover .vitrine-item {
 		transform: scale(1.02);
 		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 	}
+	*/
 	.vitrine-image {
 		width: 100%;
 		height: 200px;
@@ -577,12 +594,17 @@ import 'swiper/css/effect-coverflow';
 		max-width: 600px;
 		margin: 0 auto 2rem auto;
 		box-sizing: border-box;
-		transition: box-shadow 0.3s ease, background-color 0.3s ease;
+		/* Removed transition for hover effects */
+		/* transition: box-shadow 0.3s ease, background-color 0.3s ease; */
+		transition: background-color 0.3s ease; /* Keep background color transition */
 		border: 1px solid var(--border-color); /* Add subtle border */
 	}
+	/* REMOVED .contact-form:hover styles */
+	/*
 	.contact-form:hover {
 		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 	}
+	*/
 	.form-group {
 		margin-bottom: 1.5rem;
 	}
