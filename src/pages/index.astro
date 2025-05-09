@@ -91,20 +91,30 @@ import 'swiper/css/effect-coverflow';
 		<h2>Notre Zone d'Intervention Principale</h2>
 		<p>Basé près de 04700 Le Castellet, nous intervenons dans les environs.</p>
 		<div class="map-container">
+			<!-- 
+			  REPLACE THIS iframe with your Google My Business embed code.
+			  How to get it:
+			  1. Go to Google Maps and search for your business.
+			  2. Click on your business listing.
+			  3. Click the "Share" button.
+			  4. Go to the "Embed a map" tab.
+			  5. Copy the iframe code provided and paste it here.
+			  
+			  The example below is a generic map for "Le Castellet".
+			-->
 			<iframe
+				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22977.698102809892!2d5.758781840588819!3d43.85219171387919!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c913080a0d567b%3A0x40819a5fd970000!2s04700%20Le%20Castellet!5e0!3m2!1sen!2sfr!4v1716305000000!5m2!1sen!2sfr"
 				width="100%"
-				height="300"
-				frameborder="0"
-				scrolling="no"
-				marginheight="0"
-				marginwidth="0"
-				src="https://www.openstreetmap.org/export/embed.html?bbox=5.755,43.843,5.795,43.863&layer=mapnik&marker=43.853,5.775"
-				style="border: 1px solid black; border-radius: 8px;"
-				title="Carte de localisation SOS-PC"
-			></iframe>
+				height="350"
+				style="border:0; border-radius: 8px;"
+				allowfullscreen=""
+				loading="lazy"
+				referrerpolicy="no-referrer-when-downgrade"
+				title="Carte de localisation SOS-PC - Google Maps">
+			</iframe>
 			<br/>
 			<small>
-				<a href="https://www.openstreetmap.org/?mlat=43.853&mlon=5.775#map=15/43.853/5.775" target="_blank">Voir une carte plus grande</a>
+				<a href="https://maps.google.com/?q=04700+Le+Castellet" target="_blank">Voir sur Google Maps</a>
 			</small>
 		</div>
 	</section>
@@ -403,16 +413,18 @@ import 'swiper/css/effect-coverflow';
 	}
 	.map-container iframe {
 		max-width: 100%;
-		filter: grayscale(var(--map-grayscale, 30%)) contrast(var(--map-contrast, 90%)); /* Allow theme override */
-		opacity: 0.9;
+		/* filter: grayscale(var(--map-grayscale, 30%)) contrast(var(--map-contrast, 90%)); */ /* Google Maps doesn't respond to filter as well */
+		opacity: 0.95; /* Slightly more opaque for better visibility */
 		border-radius: 8px;
 		border: 1px solid var(--border-color);
-		transition: filter 0.3s ease, border-color 0.3s ease;
+		transition: opacity 0.3s ease, border-color 0.3s ease; /* Removed filter transition */
 	}
+	/*
 	html.dark .map-container iframe {
-		--map-grayscale: 10%; /* Less grayscale in dark mode */
+		--map-grayscale: 10%; 
 		--map-contrast: 100%;
 	}
+	*/
 	.map-container small {
 		display: block;
 		margin-top: 0.5rem;
