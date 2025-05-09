@@ -6,8 +6,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 
-import LottieAnimation from '../components/LottieAnimation.astro';
-
 // JS Imports moved to the client-side script below
 ---
 
@@ -20,14 +18,6 @@ import LottieAnimation from '../components/LottieAnimation.astro';
 		<p>
 			SOS-PC, dirigé par un auto-entrepreneur passionné, propose une gamme complète de services pour répondre à vos besoins technologiques. Notre objectif est d'offrir des solutions fiables, performantes et adaptées, que ce soit pour les particuliers ou les professionnels.
 		</p>
-    <div>
-      <h3>Animation Démo</h3>
-      <p>
-        Pour voir cette animation, veuillez placer un fichier Lottie JSON nommé <code>lottie-sample.json</code> dans votre dossier <code>public/</code>.
-        Vous pouvez télécharger des animations gratuites sur <a href="https://lottiefiles.com/" target="_blank" rel="noopener noreferrer">LottieFiles</a>.
-      </p>
-      <LottieAnimation path="/lottie-sample.json" width="200px" height="200px" />
-    </div>
 	</section>
 
 	<section id="services" class="cta-section">
@@ -54,9 +44,8 @@ import LottieAnimation from '../components/LottieAnimation.astro';
 
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					{/* TEMPORARY: Using lottie-sample.json for debugging */}
-					<LottieAnimation path="/lottie-sample.json" width="100%" height="180px" />
-          {/* <LottieAnimation path="/web-design/animations/43f834cb-31ab-428c-acf2-2674d3b07d94.json" width="100%" height="180px" /> */}
+					<!-- <img src="/web-design.webp" alt="Création de Site Web" class="service-card-image"> -->
+          <div id="lottie-web-design" class="service-card-lottie"></div>
 				</div>
 				<h3><i class="icon-web"></i> Création de Sites Web</h3>
 				<p>
@@ -237,8 +226,10 @@ import LottieAnimation from '../components/LottieAnimation.astro';
 <script>
   import Swiper from 'swiper';
   import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
+  import lottie from 'lottie-web';
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Swiper initialization
     const swiper = new Swiper('.vitrine-swiper', {
       modules: [Navigation, Pagination, EffectCoverflow],
       effect: 'coverflow',
@@ -262,6 +253,18 @@ import LottieAnimation from '../components/LottieAnimation.astro';
         prevEl: '.swiper-button-prev',
       },
     });
+
+    // Lottie animation for Web Design card
+    const lottieContainer = document.getElementById('lottie-web-design');
+    if (lottieContainer) {
+      lottie.loadAnimation({
+        container: lottieContainer,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/web-design/animations/43f834cb-31ab-428c-acf2-2674d3b07d94.json' // Path to your Lottie JSON
+      });
+    }
   });
 </script>
 
@@ -372,15 +375,17 @@ import LottieAnimation from '../components/LottieAnimation.astro';
 		display: block;
 	}
 
-	/* Specific styles for the GIF card image to make it taller */
-	.service-card-image-container--with-gradient .service-card-image,
-  .service-card-image-container--with-gradient > div[id^="lottie-container-"] { /* Target Lottie container */
-		height: 180px; /* Increased height */
-	}
-  .service-card-image-container--with-gradient > div[id^="lottie-container-"] > svg { /* Target Lottie SVG */
-    display: block; /* Ensure SVG behaves like a block element */
+  .service-card-lottie {
+    width: 100%;
+    height: 180px; /* Match the GIF card image height or adjust as needed */
+    display: block;
   }
 
+	/* Specific styles for the GIF card image to make it taller */
+	.service-card-image-container--with-gradient .service-card-image,
+  .service-card-image-container--with-gradient .service-card-lottie {
+		height: 180px; /* Increased height for the GIF/Lottie */
+	}
 
 	/* Gradient overlay for the GIF card image */
 	.service-card-image-container--with-gradient::after {
