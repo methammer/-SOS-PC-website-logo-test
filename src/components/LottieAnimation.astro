@@ -23,45 +23,65 @@ const animationId = `lottie-container-${Math.random().toString(36).substring(2, 
 <div id={animationId} style={`width: ${width}; height: ${height}; margin: 0 auto;`}></div>
 
 <script define:vars={{ animationPath: path, containerId: animationId, loopOpt: loop, autoplayOpt: autoplay }}>
-  import lottie from 'lottie-web/build/player/lottie_light.js'; // Using lottie_light for smaller bundle
+  import lottie from 'lottie-web/build/player/lottie_light.js';
 
-  // Ensure this script runs after the DOM is fully loaded
-  // and specifically after Astro has hydrated client-side scripts.
-  // Using a simple DOMContentLoaded or relying on script placement in Astro.
-  // Astro's script processing should handle this correctly.
-
-  const initLottie = () => {
+  const initLottieAnimation = () => {
     const container = document.getElementById(containerId);
-    if (container && !container.dataset.lottieInitialized) { // Check if already initialized
-      container.dataset.lottieInitialized = 'true'; // Mark as initialized
-      try {
-        lottie.loadAnimation({
-          container: container,
-          renderer: 'svg', // or 'canvas', 'html'
-          loop: loopOpt,
-          autoplay: autoplayOpt,
-          path: animationPath // e.g., '/lottie-sample.json' or full URL
-        });
-      } catch (error) {
-        console.error("Lottie animation failed to load:", error);
-        if (container) {
-          container.innerHTML = `<p style="color: red; text-align: center;">Error loading animation: ${animationPath}</p>`;
-        }
+
+    if (!container) {
+      console.error(`[Lottie] Container with ID "${containerId}" not found for path "${animationPath}".`);
+      return;
+    }
+
+    if (container.dataset.lottieInitialized === 'true') {
+      // console.log(`[Lottie] Animation for "${containerId}" already initialized.`);
+      return;
+    }
+    container.dataset.lottieInitialized = 'true';
+    // console.log(`[Lottie] Initializing for ${containerId} with path: ${animationPath}`);
+
+    try {
+      const anim = lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: loopOpt,
+        autoplay: autoplayOpt,
+        path: animationPath
+      });
+
+      anim.addEventListener('DOMLoaded', () => {
+        // console.log(`[Lottie] Animation DOM loaded for ${containerId} (${animationPath})`);
+      });
+
+      anim.addEventListener('data_failed', () => {
+        console.error(`[Lottie] Data_failed for ${containerId} (path: ${animationPath}). Check if JSON is valid and accessible. The browser might show a 404 error in the Network tab if the file path is incorrect.`);
+        container.innerHTML = `<p style="color: red; text-align: center; font-size: 0.8em; padding: 10px;">Error: Failed to load Lottie animation data from ${animationPath}.</p>`;
+      });
+
+      anim.addEventListener('error', (errorEvent) => {
+        console.error(`[Lottie] Generic error for ${containerId} (path: ${animationPath}):`, errorEvent);
+        container.innerHTML = `<p style="color: red; text-align: center; font-size: 0.8em; padding: 10px;">Error: Lottie animation error for ${animationPath}.</p>`;
+      });
+
+    } catch (error) {
+      console.error(`[Lottie] General error during loadAnimation for ${containerId} (path: ${animationPath}):`, error);
+      if (container) {
+        container.innerHTML = `<p style="color: red; text-align: center; font-size: 0.8em; padding: 10px;">Error initializing Lottie for ${animationPath}.</p>`;
       }
-    } else if (!container) {
-      // console.warn(`Lottie container with ID "${containerId}" not found yet. Retrying...`);
-      // setTimeout(initLottie, 100); // Optional: retry if container not found immediately
     }
   };
 
+  // Astro executes component scripts after their HTML is rendered.
+  // Using DOMContentLoaded as an additional safeguard or for non-Astro contexts.
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLottie);
+    document.addEventListener('DOMContentLoaded', initLottieAnimation);
   } else {
     // DOMContentLoaded has already fired
-    initLottie();
+    initLottieAnimation();
   }
 
-  // Astro specific: if this component is part of an island that gets hydrated later
-  // document.addEventListener('astro:page-load', initLottie); // For full page navigations
-  // document.addEventListener('astro:after-swap', initLottie); // For view transitions
+  // If using Astro View Transitions or complex client-side routing,
+  // you might need these event listeners to re-initialize animations.
+  // document.addEventListener('astro:page-load', initLottieAnimation);
+  // document.addEventListener('astro:after-swap', initLottieAnimation);
 </script>
