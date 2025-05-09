@@ -1,54 +1,128 @@
-# Astro Starter Kit: Basics
+# SOS-PC Website
 
-```sh
-npm create astro@latest -- --template basics
+Welcome to the official repository for the SOS-PC website. This project aims to create a modern, responsive, and informative online presence for SOS-PC, a provider of personalized IT and web solutions.
+
+## ✨ About SOS-PC
+
+SOS-PC, led by a passionate self-employed entrepreneur, offers a comprehensive range of services to meet diverse technological needs. The goal is to provide reliable, high-performance, and tailored solutions for both individuals and professionals.
+
+### Key Services Highlighted:
+*   **Réparation Informatique:** Troubleshooting, custom PC builds, optimization, and data recovery.
+*   **Création de Sites Web:** Modern, responsive showcase websites optimized for online presence.
+*   **Hébergement Streaming:** Setup and management of personal media platforms (e.g., Jellyfin).
+*   **Hébergement Modèles IA (In Development):** Deployment and management of AI models.
+
+## 🚀 Project Goals
+
+*   Develop a professional and engaging website using [Astro](https://astro.build/).
+*   Showcase SOS-PC's services and expertise.
+*   Provide an easy way for potential clients to get in touch.
+*   Ensure a responsive design for optimal viewing on all devices.
+*   Incorporate interactive elements like a service showcase and a project vitrine.
+
+## 🛠️ Tech Stack
+
+*   **Framework:** [Astro](https://astro.build/) - For building fast, content-focused websites.
+*   **Styling:** CSS (with CSS Variables for theming).
+*   **JavaScript:** For interactive components (e.g., Swiper.js for carousels).
+*   **Deployment:** (To be determined - currently set up for local development)
+
+## ⚙️ Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+
+*   Node.js (version 18.x or higher recommended)
+*   npm (comes with Node.js)
+
+### Installation & Running
+
+1.  **Clone the repository (if applicable):**
+    If you have this project locally, you can skip this step.
+    ```sh
+    # git clone https://your-repository-url.git
+    # cd SOS-PC-website-logo-test-main
+    ```
+
+2.  **Install NPM packages:**
+    This will install Astro and other necessary dependencies.
+    ```sh
+    npm install
+    ```
+
+3.  **Run the development server:**
+    This command starts the local development server, typically at `http://localhost:4321`.
+    ```sh
+    npm run dev
+    ```
+    Astro will automatically open the site in your default web browser.
+
+### Other Available Scripts
+
+*   **Build for production:**
+    ```sh
+    npm run build
+    ```
+    This command builds the static site to the `./dist/` directory.
+
+*   **Preview the production build:**
+    ```sh
+    npm run preview
+    ```
+    This command serves the `./dist/` folder locally to preview the production build.
+
+*   **Astro CLI commands:**
+    You can run various Astro CLI commands directly.
+    ```sh
+    npm run astro -- --help
+    ```
+
+## 📁 Project Structure
+
+The project follows a standard Astro project structure:
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
-
-> ð§âð **Seasoned astronaut?** Delete this file. Have fun!
-
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
-## ð Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-âââ public/
-â   âââ favicon.svg
-âââ src/
-â   âââ components/
-â   â   âââ Card.astro
-â   âââ layouts/
-â   â   âââ Layout.astro
-â   âââ pages/
-â       âââ index.astro
-âââ package.json
+├── public/             # Static assets (images, favicons, etc.)
+│   └── favicon.svg
+├── src/
+│   ├── components/     # Reusable Astro components (e.g., Navbar.astro, ThemeSwitcher.astro)
+│   ├── layouts/        # Base layout components (e.g., Layout.astro)
+│   ├── pages/          # Astro pages, which become routes (e.g., index.astro)
+│   └── env.d.ts        # TypeScript environment declarations
+├── astro.config.mjs    # Astro configuration file
+├── package.json        # Project dependencies and scripts
+├── tsconfig.json       # TypeScript configuration
+└── README.md           # This file
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🌟 Key Features Implemented
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+*   **Homepage (`src/pages/index.astro`):**
+    *   Introduction to SOS-PC.
+    *   Detailed service cards with hover effects.
+    *   Interactive map showing the primary intervention zone.
+    *   "Vitrine Web" section with a Swiper.js carousel to showcase past projects.
+    *   Contact form (Netlify-ready) and direct contact buttons.
+*   **Layout (`src/layouts/Layout.astro`):**
+    *   Basic HTML structure, including global styles and theme management.
+    *   Navbar and Footer components.
+*   **Components:**
+    *   `Navbar.astro`: Navigation bar.
+    *   `ThemeSwitcher.astro`: Allows users to toggle between light and dark themes.
+    *   `AsciiBackground.astro`: (If used) A dynamic ASCII art background.
+    *   `CoverPage.astro`: (If used) A potential cover or landing page element.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🤝 Contributing
 
-## ð§ Commands
+Contributions, issues, and feature requests are welcome!
+As this is currently a personal or small-team project, please discuss any major changes you wish to make via an issue first.
 
-All commands are run from the root of the project, from a terminal:
+## 📄 License
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+This project is currently unlicensed. (Or specify a license if one is chosen, e.g., MIT License).
 
-## ð Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+We hope this README provides a clearer understanding of the SOS-PC website project. Let's build something great!
