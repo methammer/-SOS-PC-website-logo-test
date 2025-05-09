@@ -27,7 +27,6 @@ import 'swiper/css/effect-coverflow';
 		<div class="service-cards">
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					<!-- <img src="/repair-service.webp" alt="Réparation Informatique" class="service-card-image"> -->
           <div id="lottie-pc-repair" class="service-card-lottie"></div>
 				</div>
 				<h3><i class="icon-repair"></i> Réparation Informatique</h3>
@@ -45,7 +44,6 @@ import 'swiper/css/effect-coverflow';
 
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					<!-- <img src="/web-design.webp" alt="Création de Site Web" class="service-card-image"> -->
           <div id="lottie-web-design" class="service-card-lottie"></div>
 				</div>
 				<h3><i class="icon-web"></i> Création de Sites Web</h3>
@@ -63,7 +61,7 @@ import 'swiper/css/effect-coverflow';
 
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					<img src="https://via.placeholder.com/300x150.png?text=Streaming+Media" alt="Hébergement Streaming" class="service-card-image">
+					<div id="lottie-streaming" class="service-card-lottie"></div>
 				</div>
 				<h3><i class="icon-stream"></i> Hébergement Streaming</h3>
 				<p>
@@ -275,7 +273,19 @@ import 'swiper/css/effect-coverflow';
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: '/PC-repair/animations/8acfa0f0-493f-445c-a1a3-ae798829ce77.json' // Corrected path
+        path: '/PC-repair/animations/8acfa0f0-493f-445c-a1a3-ae798829ce77.json'
+      });
+    }
+
+    // Lottie animation for Streaming card
+    const lottieStreamingContainer = document.getElementById('lottie-streaming');
+    if (lottieStreamingContainer) {
+      lottie.loadAnimation({
+        container: lottieStreamingContainer,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/Streaming/animations/3add7b2a-2592-4274-a7f6-614fcd7bfe31.json'
       });
     }
   });
