@@ -6,6 +6,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 
+import LottieAnimation from '../components/LottieAnimation.astro';
+
 // JS Imports moved to the client-side script below
 ---
 
@@ -18,6 +20,14 @@ import 'swiper/css/effect-coverflow';
 		<p>
 			SOS-PC, dirigé par un auto-entrepreneur passionné, propose une gamme complète de services pour répondre à vos besoins technologiques. Notre objectif est d'offrir des solutions fiables, performantes et adaptées, que ce soit pour les particuliers ou les professionnels.
 		</p>
+    <div>
+      <h3>Animation Démo</h3>
+      <p>
+        Pour voir cette animation, veuillez placer un fichier Lottie JSON nommé <code>lottie-sample.json</code> dans votre dossier <code>public/</code>.
+        Vous pouvez télécharger des animations gratuites sur <a href="https://lottiefiles.com/" target="_blank" rel="noopener noreferrer">LottieFiles</a>.
+      </p>
+      <LottieAnimation path="/lottie-sample.json" width="200px" height="200px" />
+    </div>
 	</section>
 
 	<section id="services" class="cta-section">
@@ -44,7 +54,7 @@ import 'swiper/css/effect-coverflow';
 
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					<img src="/web-design.webp" alt="Création de Site Web" class="service-card-image">
+					<LottieAnimation path="/web-design/manifest.json" width="100%" height="180px" />
 				</div>
 				<h3><i class="icon-web"></i> Création de Sites Web</h3>
 				<p>
@@ -361,9 +371,14 @@ import 'swiper/css/effect-coverflow';
 	}
 
 	/* Specific styles for the GIF card image to make it taller */
-	.service-card-image-container--with-gradient .service-card-image {
-		height: 180px; /* Increased height for the GIF */
+	.service-card-image-container--with-gradient .service-card-image,
+  .service-card-image-container--with-gradient > div[id^="lottie-container-"] { /* Target Lottie container */
+		height: 180px; /* Increased height */
 	}
+  .service-card-image-container--with-gradient > div[id^="lottie-container-"] > svg { /* Target Lottie SVG */
+    display: block; /* Ensure SVG behaves like a block element */
+  }
+
 
 	/* Gradient overlay for the GIF card image */
 	.service-card-image-container--with-gradient::after {

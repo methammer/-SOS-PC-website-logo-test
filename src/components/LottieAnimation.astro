@@ -1,0 +1,67 @@
+---
+// src/components/LottieAnimation.astro
+export interface Props {
+  path: string; // Path to the Lottie JSON file (e.g., in /public or an external URL)
+  width?: string;
+  height?: string;
+  loop?: boolean;
+  autoplay?: boolean;
+}
+
+const {
+  path,
+  width = '300px',
+  height = '300px',
+  loop = true,
+  autoplay = true
+} = Astro.props;
+
+// Generate a unique ID for each instance to avoid conflicts if multiple animations are on the page
+const animationId = `lottie-container-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div id={animationId} style={`width: ${width}; height: ${height}; margin: 0 auto;`}></div>
+
+<script define:vars={{ animationPath: path, containerId: animationId, loopOpt: loop, autoplayOpt: autoplay }}>
+  import lottie from 'lottie-web/build/player/lottie_light.js'; // Using lottie_light for smaller bundle
+
+  // Ensure this script runs after the DOM is fully loaded
+  // and specifically after Astro has hydrated client-side scripts.
+  // Using a simple DOMContentLoaded or relying on script placement in Astro.
+  // Astro's script processing should handle this correctly.
+
+  const initLottie = () => {
+    const container = document.getElementById(containerId);
+    if (container && !container.dataset.lottieInitialized) { // Check if already initialized
+      container.dataset.lottieInitialized = 'true'; // Mark as initialized
+      try {
+        lottie.loadAnimation({
+          container: container,
+          renderer: 'svg', // or 'canvas', 'html'
+          loop: loopOpt,
+          autoplay: autoplayOpt,
+          path: animationPath // e.g., '/lottie-sample.json' or full URL
+        });
+      } catch (error) {
+        console.error("Lottie animation failed to load:", error);
+        if (container) {
+          container.innerHTML = `<p style="color: red; text-align: center;">Error loading animation: ${animationPath}</p>`;
+        }
+      }
+    } else if (!container) {
+      // console.warn(`Lottie container with ID "${containerId}" not found yet. Retrying...`);
+      // setTimeout(initLottie, 100); // Optional: retry if container not found immediately
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLottie);
+  } else {
+    // DOMContentLoaded has already fired
+    initLottie();
+  }
+
+  // Astro specific: if this component is part of an island that gets hydrated later
+  // document.addEventListener('astro:page-load', initLottie); // For full page navigations
+  // document.addEventListener('astro:after-swap', initLottie); // For view transitions
+</script>
