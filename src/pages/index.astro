@@ -27,7 +27,8 @@ import 'swiper/css/effect-coverflow';
 		<div class="service-cards">
 			<article class="service-card">
 				<div class="service-card-image-container service-card-image-container--with-gradient">
-					<img src="/repair-service.webp" alt="Réparation Informatique" class="service-card-image">
+					<!-- <img src="/repair-service.webp" alt="Réparation Informatique" class="service-card-image"> -->
+          <div id="lottie-pc-repair" class="service-card-lottie"></div>
 				</div>
 				<h3><i class="icon-repair"></i> Réparation Informatique</h3>
 				<p>
@@ -255,14 +256,26 @@ import 'swiper/css/effect-coverflow';
     });
 
     // Lottie animation for Web Design card
-    const lottieContainer = document.getElementById('lottie-web-design');
-    if (lottieContainer) {
+    const lottieWebDesignContainer = document.getElementById('lottie-web-design');
+    if (lottieWebDesignContainer) {
       lottie.loadAnimation({
-        container: lottieContainer,
+        container: lottieWebDesignContainer,
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: '/web-design/animations/43f834cb-31ab-428c-acf2-2674d3b07d94.json' // Path to your Lottie JSON
+        path: '/web-design/animations/43f834cb-31ab-428c-acf2-2674d3b07d94.json'
+      });
+    }
+
+    // Lottie animation for PC Repair card
+    const lottiePcRepairContainer = document.getElementById('lottie-pc-repair');
+    if (lottiePcRepairContainer) {
+      lottie.loadAnimation({
+        container: lottiePcRepairContainer,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/PC-repair/animations/76ef653d-fa2e-465f-a73d-977044fee798.json'
       });
     }
   });
