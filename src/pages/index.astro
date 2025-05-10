@@ -76,7 +76,8 @@ import 'swiper/css/effect-coverflow';
 				<a href="#contact" class="cta-button">En savoir plus</a>
 			</article>
 
-			<article class="service-card">
+			<article class="service-card service-card--coming-soon">
+				<div class="coming-soon-banner">Prochainement</div>
 				<div class="service-card-image-container service-card-image-container--with-gradient">
 					<img src="https://via.placeholder.com/300x150.png?text=Modèle+IA" alt="Hébergement Modèles IA" class="service-card-image">
 				</div>
@@ -380,12 +381,47 @@ import 'swiper/css/effect-coverflow';
 		transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease;
 		overflow: hidden;
 		border: 1px solid var(--border-color); /* Add subtle border */
+		position: relative; /* Needed for the banner positioning */
 	}
 
 	.service-card:hover {
 		transform: translateY(-5px);
 		box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 	}
+
+	.service-card--coming-soon .service-card-image-container,
+	.service-card--coming-soon h3,
+	.service-card--coming-soon p,
+	.service-card--coming-soon ul,
+	.service-card--coming-soon .cta-button {
+		opacity: 0.5; /* Dim the content of the coming soon card */
+		pointer-events: none; /* Disable interactions with dimmed content */
+	}
+
+	.service-card--coming-soon .cta-button {
+		background-color: var(--disabled-button-bg-color, #6c757d); /* Greyed out button */
+		cursor: not-allowed;
+	}
+
+
+	.coming-soon-banner {
+		position: absolute;
+		top: 500px !important;   /* User-set value, maintained */
+		left: -100px !important;  /* Adjusted for new length */
+		background-color: rgb(var(--accent)); /* Purple theme */
+		color: white;
+		padding: 10px 250px;     /* Increased padding for length */
+		font-size: 0.9rem;
+		font-weight: bold;
+		text-align: center;
+		transform: rotate(-45deg);
+		transform-origin: top left;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		z-index: 10;
+		white-space: nowrap;
+		letter-spacing: 0.5px;
+	}
+
 
 	.service-card-image-container {
 		position: relative;
