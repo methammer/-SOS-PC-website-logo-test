@@ -17,7 +17,8 @@ const portfolioItemsConfig = [
     description: "Création d'un site web moderne et responsive pour un artisan local, mettant en valeur ses services et réalisations.",
     liveUrl: "https://boutique-artisan.netlify.app",
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Artisan",
-    altText: "Aperçu Site Artisan"
+    altText: "Aperçu Site Artisan",
+    localFallbackImg: "/Portfolio preview/boutique-artisan.png" // Added local fallback
   },
   {
     id: "Restaurant",
@@ -52,14 +53,12 @@ if (apiKey) {
   const fetchPromises = portfolioItemsConfig.map(async (item) => {
     if (item.liveUrl && item.liveUrl !== "#" && !item.liveUrl.startsWith('https://via.placeholder.com')) {
       try {
-        // AbstractAPI parameters: width=400, height=250, capture_full_page=false
-        // You can adjust these. E.g. for better quality on retina, request 800x500 and let CSS resize.
-        const apiUrl = `https://screenshot.abstractapi.com/v1/?api_key=${apiKey}&url=${encodeURIComponent(item.liveUrl)}&json=true&width=400&height=250&capture_full_page=false&delay=2`; // delay for sites with animations
+        const apiUrl = `https://screenshot.abstractapi.com/v1/?api_key=${apiKey}&url=${encodeURIComponent(item.liveUrl)}&json=true&width=400&height=250&capture_full_page=false&delay=2`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
           const errorBody = await response.text();
           console.error(`AbstractAPI error for ${item.liveUrl} [${response.status}]: ${errorBody.substring(0, 300)}`);
-          return { id: item.id, url: item.placeholderImg };
+          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback if API error
         }
         const data = await response.json();
         if (data.url) {
@@ -67,14 +66,15 @@ if (apiKey) {
           return { id: item.id, url: data.url };
         } else {
           console.warn(`AbstractAPI did not return a URL for ${item.liveUrl}. Response:`, JSON.stringify(data).substring(0, 300));
-          return { id: item.id, url: item.placeholderImg };
+          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback if no URL in response
         }
       } catch (error) {
         console.error(`Failed to fetch screenshot for ${item.liveUrl}:`, error);
-        return { id: item.id, url: item.placeholderImg };
+        return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback on any other fetch error
       }
     }
-    return { id: item.id, url: item.placeholderImg };
+    // For items not fetched via API (e.g., liveUrl is "#" or placeholder)
+    return { id: item.id, url: item.localFallbackImg || item.placeholderImg };
   });
 
   const results = await Promise.all(fetchPromises);
@@ -82,9 +82,9 @@ if (apiKey) {
     portfolioPreviews[result.id] = result.url;
   });
 } else {
-  console.warn("ABSTRACT_API_KEY not found in .env. Using placeholder images for portfolio.");
+  console.warn("ABSTRACT_API_KEY not found in .env. Using placeholder or local fallback images for portfolio.");
   portfolioItemsConfig.forEach(item => {
-    portfolioPreviews[item.id] = item.placeholderImg;
+    portfolioPreviews[item.id] = item.localFallbackImg || item.placeholderImg;
   });
 }
 ---
