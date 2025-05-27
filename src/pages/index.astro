@@ -240,25 +240,25 @@ if (apiKey) {
 			Pour toute demande d'information ou devis, n'hésitez pas à remplir le formulaire ci-dessous ou à nous contacter directement via les options ci-dessous. Nous serons ravis de discuter de votre projet.
 		</p>
 
-		<form class="contact-form" netlify>
-			<div class="form-group">
-				<label for="name">Nom :</label>
-				<input type="text" id="name" name="name" required />
-			</div>
-			<div class="form-group">
-				<label for="email">Email :</label>
-				<input type="email" id="email" name="email" required />
-			</div>
-			<div class="form-group">
-				<label for="subject">Sujet :</label>
-				<input type="text" id="subject" name="subject" required />
-			</div>
-			<div class="form-group">
-				<label for="message">Message :</label>
-				<textarea id="message" name="message" rows="5" required></textarea>
-			</div>
-			<button type="submit" class="submit-button">Envoyer le Message</button>
-		</form>
+		<form class="contact-form" name="contact" method="POST" data-netlify="true">
+    <div class="form-group">
+        <label for="name">Nom :</label>
+        <input type="text" id="name" name="name" required />
+    </div>
+    <div class="form-group">
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required />
+    </div>
+    <div class="form-group">
+        <label for="subject">Sujet :</label>
+        <input type="text" id="subject" name="subject" required />
+    </div>
+    <div class="form-group">
+        <label for="message">Message :</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="submit-button">Envoyer le Message</button>
+</form>
 
 		<div class="contact-buttons">
 			<p>Ou contactez-nous directement :</p>
