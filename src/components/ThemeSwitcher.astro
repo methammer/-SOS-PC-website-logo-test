@@ -35,9 +35,9 @@
     --knob-padding: 3px;  /* Padding within track, (track_height - 2*padding) = knob_size */
     --knob-travel-distance: calc(var(--switch-width) - var(--knob-size) - (2 * var(--knob-padding)));
 
-    /* Light Mode - Inactive Track (Sun icon visible) */
-    background-color: #BDBDBD; /* Material Grey 400 */
-    border: none; /* Material switches typically don't have a border on the track */
+    /* Light Mode - Track color */
+    background-color: #BDBDBD; /* Material Grey 400 - This is for LIGHT THEME */
+    border: none;
     cursor: pointer;
     padding: var(--knob-padding);
     border-radius: var(--switch-height); /* Pill shape */
@@ -51,15 +51,20 @@
     transition: background-color 0.3s ease;
   }
 
-  /* Track styling when page is in Dark Mode, but switch is set to Light (Sun icon) */
+  /* Track styling when page is in Dark Mode, and switch is set to Light (Sun icon) */
   html.dark .theme-switch:not(.dark-active) {
-    background-color: rgba(255, 255, 255, 0.65); /* Semi-transparent white for dark theme inactive track */
+    background-color: #8e8e8e; /* MODIFIED: Light Grey 300 for dark theme track */
   }
 
-  /* Track styling when switch is Active (Dark Mode selected on switch) */
-  /* This implies html.dark is true due to script logic */
+  /* Default track styling when switch is Active (Dark Mode selected on switch) */
+  /* This would apply if, for example, the page was light but switch was forced dark */
   .theme-switch.dark-active {
-    background-color: var(--accent-light); /* Use solid accent color for the track */
+    background-color: var(--accent-light); /* Original accent color for the track */
+  }
+  
+  /* Track styling when page is in Dark Mode AND switch is Active (Dark Mode selected on switch) */
+  html.dark .theme-switch.dark-active {
+    background-color: #8e8e8e; /* ADDED/MODIFIED: Light Grey 300 for dark theme track */
   }
 
   .switch-knob {
@@ -80,7 +85,7 @@
   .theme-switch.dark-active .switch-knob {
     transform: translateX(var(--knob-travel-distance));
     background-color: #FFFFFF; /* White knob for high contrast */
-    color: var(--accent-light); /* Icon color matches the active track color */
+    color: var(--accent-light); /* Icon color (moon) remains accent-light. User did not request change here. */
   }
 
   /* Knob styling when page is in Dark Mode, but switch is set to Light (Sun icon) */
