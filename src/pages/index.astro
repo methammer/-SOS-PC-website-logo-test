@@ -240,25 +240,38 @@ if (apiKey) {
 			Pour toute demande d'information ou devis, n'hésitez pas à remplir le formulaire ci-dessous ou à nous contacter directement via les options ci-dessous. Nous serons ravis de discuter de votre projet.
 		</p>
 
-		<form class="contact-form" name="contact" method="POST" data-netlify="true">
-    <div class="form-group">
-        <label for="name">Nom :</label>
-        <input type="text" id="name" name="name" required />
-    </div>
-    <div class="form-group">
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" required />
-    </div>
-    <div class="form-group">
-        <label for="subject">Sujet :</label>
-        <input type="text" id="subject" name="subject" required />
-    </div>
-    <div class="form-group">
-        <label for="message">Message :</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
-    </div>
-    <button type="submit" class="submit-button">Envoyer le Message</button>
-</form>
+		<form class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+      {/* Hidden fields for Netlify Forms enhancement */}
+      <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="subject" value="[SOS-PC Contact] Nouveau message de %{name} - Sujet: %{contact_subject}" />
+      <input type="hidden" name="replyto" value="%{email}" />
+
+      {/* Honeypot field for spam prevention, should be hidden with CSS or style attribute */}
+      <p style="display:none;">
+        <label>
+          Ne pas remplir si vous êtes humain : <input name="bot-field" />
+        </label>
+      </p>
+      
+      {/* Visible form fields */}
+      <div class="form-group">
+          <label for="name">Nom :</label>
+          <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-group">
+          <label for="email">Email :</label>
+          <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+          <label for="contact_subject">Sujet :</label> {/* id and name changed */}
+          <input type="text" id="contact_subject" name="contact_subject" required /> {/* id and name changed */}
+      </div>
+      <div class="form-group">
+          <label for="message">Message :</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="submit-button">Envoyer le Message</button>
+    </form>
 
 		<div class="contact-buttons">
 			<p>Ou contactez-nous directement :</p>
