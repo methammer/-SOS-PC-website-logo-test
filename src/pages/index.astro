@@ -18,23 +18,24 @@ const portfolioItemsConfig = [
     liveUrl: "https://boutique-artisan.netlify.app",
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Artisan",
     altText: "Aperçu Site Artisan",
-    localFallbackImg: "/Portfolio preview/boutique-artisan.png" // Added local fallback
+    localFallbackImg: "/Portfolio preview/boutique-artisan.png"
   },
   {
     id: "Restaurant",
     name: "Site Web pour Restaurant",
     description: "Développement d'un site avec menu en ligne interactif, système de réservation de table, galerie photos des plats et de l'établissement, et intégration des avis clients.",
-    liveUrl: "#", // Update this URL to a real one to get a screenshot
+    liveUrl: "#", 
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Restaurant",
     altText: "Aperçu Site Restaurant"
   },
   {
-    id: "Photographe",
-    name: "Portfolio en Ligne",
-    description: "Mise en place d'un portfolio élégant pour un photographe, optimisé pour l'affichage d'images haute résolution, avec des galeries thématiques et une section biographie.",
-    liveUrl: "#", // Update this URL to a real one to get a screenshot
-    placeholderImg: "https://via.placeholder.com/400x250.png?text=Portfolio+Photographe",
-    altText: "Aperçu Portfolio Photographe"
+    id: "GiteProvence",
+    name: "Site de Location de Gîte",
+    description: "Développement d'un site attractif pour la location d'un gîte en Provence, avec galerie photos, calendrier de disponibilités, formulaire de réservation et informations touristiques locales.",
+    liveUrl: "https://gite-provence.netlify.app/",
+    placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Gîte+Provence",
+    altText: "Aperçu Site Gîte Provence",
+    localFallbackImg: "/Portfolio preview/gite-provence.png" // Added local fallback
   },
   {
     id: "BoltDIY2",
@@ -58,7 +59,7 @@ if (apiKey) {
         if (!response.ok) {
           const errorBody = await response.text();
           console.error(`AbstractAPI error for ${item.liveUrl} [${response.status}]: ${errorBody.substring(0, 300)}`);
-          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback if API error
+          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; 
         }
         const data = await response.json();
         if (data.url) {
@@ -66,14 +67,13 @@ if (apiKey) {
           return { id: item.id, url: data.url };
         } else {
           console.warn(`AbstractAPI did not return a URL for ${item.liveUrl}. Response:`, JSON.stringify(data).substring(0, 300));
-          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback if no URL in response
+          return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; 
         }
       } catch (error) {
         console.error(`Failed to fetch screenshot for ${item.liveUrl}:`, error);
-        return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; // Use local fallback on any other fetch error
+        return { id: item.id, url: item.localFallbackImg || item.placeholderImg }; 
       }
     }
-    // For items not fetched via API (e.g., liveUrl is "#" or placeholder)
     return { id: item.id, url: item.localFallbackImg || item.placeholderImg };
   });
 
