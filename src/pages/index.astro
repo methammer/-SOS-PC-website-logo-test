@@ -14,7 +14,7 @@ const portfolioItemsConfig = [
   {
     id: "Artisan",
     name: "Site Vitrine pour Artisan",
-    description: "Création d'un site web moderne et responsive pour un artisan local, mettant en valeur ses services et réalisations.",
+    description: "Création d'un site web moderne et responsive pour un artisan local, mettant en valeur ses services et réalisations. Ce projet inclut une galerie d'images, un formulaire de contact et une optimisation pour les moteurs de recherche.",
     liveUrl: "https://boutique-artisan.netlify.app",
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Artisan",
     altText: "Aperçu Site Artisan",
@@ -23,7 +23,7 @@ const portfolioItemsConfig = [
   {
     id: "Restaurant",
     name: "Site Web pour Restaurant",
-    description: "Développement d'un site avec menu en ligne, galerie photos et formulaire de réservation.",
+    description: "Développement d'un site avec menu en ligne interactif, système de réservation de table, galerie photos des plats et de l'établissement, et intégration des avis clients.",
     liveUrl: "#", // Update this URL to a real one to get a screenshot
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Site+Restaurant",
     altText: "Aperçu Site Restaurant"
@@ -31,7 +31,7 @@ const portfolioItemsConfig = [
   {
     id: "Photographe",
     name: "Portfolio en Ligne",
-    description: "Mise en place d'un portfolio élégant pour un photographe, optimisé pour l'affichage d'images haute résolution.",
+    description: "Mise en place d'un portfolio élégant pour un photographe, optimisé pour l'affichage d'images haute résolution, avec des galeries thématiques et une section biographie.",
     liveUrl: "#", // Update this URL to a real one to get a screenshot
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Portfolio+Photographe",
     altText: "Aperçu Portfolio Photographe"
@@ -39,7 +39,7 @@ const portfolioItemsConfig = [
   {
     id: "BoltDIY2",
     name: "Projet Bolt DIY 2",
-    description: "Un exemple de site web interactif créé avec Bolt.",
+    description: "Un exemple de site web interactif et dynamique créé avec les outils Bolt, démontrant diverses fonctionnalités et une intégration fluide de composants.",
     liveUrl: "https://bolt-diy-2-1746478852874.netlify.app/",
     placeholderImg: "https://via.placeholder.com/400x250.png?text=Aperçu+Bolt+DIY+2",
     altText: "Aperçu Projet Bolt DIY 2"
@@ -314,6 +314,7 @@ if (apiKey) {
       centeredSlides: true,
       loop: true,
       slidesPerView: 'auto',
+      autoHeight: true, 
       coverflowEffect: {
         rotate: 50,
         stretch: 0,
@@ -640,16 +641,16 @@ if (apiKey) {
 	.vitrine-swiper {
 		width: 100%;
 		padding-top: 20px;
-		padding-bottom: 50px;
+		padding-bottom: 50px; /* For pagination */
 		position: relative;
 	}
 	.swiper-slide {
 		background-position: center;
 		background-size: cover;
-		width: 60%;
-		max-width: 400px;
-		overflow: hidden;
+		width: 60%; /* Default width, overridden in media queries */
+		max-width: 400px; /* Max width for larger screens */
 		border-radius: 8px;
+		/* overflow: hidden; Swiper handles overflow for effects */
 	}
 	.swiper-slide:not(.swiper-slide-active) {
 		opacity: 0.7;
@@ -657,44 +658,47 @@ if (apiKey) {
 	.swiper-slide .vitrine-item {
 		background-color: var(--card-bg-color); 
 		border-radius: 8px;
-		overflow: hidden;
+		overflow: hidden; /* Important to clip content to card boundaries */
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		height: 100%; /* Make item fill the slide height, works with Swiper's autoHeight */
 		margin: 0 auto;
 		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 		transition: background-color 0.3s ease; 
-		height: 100%;
 		border: 1px solid var(--border-color); 
 	}
 
 	.vitrine-image {
 		width: 100%;
-		height: 200px;
+		height: 200px; /* Default height */
 		object-fit: cover;
-		object-position: top; /* This will prioritize the top of the image */
+		object-position: top; 
 		display: block;
 		border-bottom: 3px solid var(--link-color); 
 		transition: border-color 0.3s ease;
-    background-color: var(--card-bg-color); /* Add a background for images that might be transparent or slow loading */
+    background-color: var(--card-bg-color); 
 	}
 	.vitrine-content {
 		padding: 1.5rem;
-		flex-grow: 1;
+		flex-grow: 1; /* Allows content to take available space */
 		display: flex;
 		flex-direction: column;
-		min-height: 150px;
 	}
 	.vitrine-content h3 {
 		margin-top: 0;
 		color: var(--heading-color); 
 		margin-bottom: 0.75rem;
+    font-size: 1.1rem; 
 	}
 	.vitrine-content p {
 		color: var(--card-text-color); 
-		flex-grow: 1;
+		flex-grow: 1; 
 		margin-bottom: 1rem;
 		transition: color 0.3s ease;
+    font-size: 0.9rem; 
+    line-height: 1.5;
+    word-break: break-word; 
 	}
 	.vitrine-link {
 		display: inline-block;
@@ -705,10 +709,10 @@ if (apiKey) {
 		text-decoration: none;
 		font-weight: bold;
 		transition: color 0.2s ease, background-color 0.2s ease, border-color 0.3s ease;
-		margin-top: auto;
+		margin-top: auto; 
 		border: 1px solid var(--link-color); 
 		text-align: center;
-		max-width: 150px;
+		max-width: 150px; 
 	}
 	.vitrine-link:hover {
 		background-color: rgba(var(--accent), 0.2); 
@@ -748,8 +752,8 @@ if (apiKey) {
 		width: 40px;
 		height: 40px;
 		transition: background-color 0.2s ease, color 0.3s ease;
-		top: 50%;
-		transform: translateY(-50%);
+		top: 50%; 
+    transform: translateY(-70%); 
 	}
 	html.light .swiper-button-prev,
 	html.light .swiper-button-next {
@@ -775,7 +779,7 @@ if (apiKey) {
 	#contact h2 {
 		text-align: center;
 	}
-	#contact > p:first-of-type { /* Paragraph directly under #contact */
+	#contact > p:first-of-type { 
 		text-align: center;
 		margin-bottom: 2rem;
 	}
@@ -972,17 +976,54 @@ if (apiKey) {
   }
 
 
-	@media (max-width: 768px) {
-		.swiper-slide { width: 70%; }
+	@media (max-width: 768px) { /* Tablet and larger phones */
+		.swiper-slide { 
+      width: 70%; 
+    }
+    .vitrine-image {
+      height: 190px; 
+    }
+    .vitrine-content h3 {
+      font-size: 1.05rem;
+    }
+    .vitrine-content p {
+      font-size: 0.88rem;
+    }
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 640px) { /* Smaller phones */
 		section { padding: 1.5rem; }
-		.swiper-slide { width: 80%; }
-		.vitrine-image { height: 180px; }
-		.vitrine-content { padding: 1rem; min-height: 120px; }
-		.vitrine-link { max-width: none; width: 100%; padding: 0.7rem 1rem; }
-		.swiper-button-prev, .swiper-button-next { width: 35px; height: 35px; }
+		.swiper-slide { 
+      width: 85%; 
+    }
+		.vitrine-image { 
+      height: 160px; 
+    }
+		.vitrine-content { 
+      padding: 1rem; 
+    }
+    .vitrine-content h3 {
+      font-size: 1rem; 
+      margin-bottom: 0.5rem;
+    }
+    .vitrine-content p {
+      font-size: 0.85rem; 
+      margin-bottom: 0.75rem;
+    }
+		.vitrine-link { 
+      display: block; /* Ensure it's block for width/margin control */
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      width: 100%; /* Make button take full available width of parent's content box */
+      /* max-width: none; /* Removed as it's redundant with width: 100% and box-sizing, and could be problematic */
+      padding: 0.7rem 1rem; /* Adjusted padding */
+      font-size: 0.9rem;
+      text-align: center; /* Center text within the button */
+    }
+		.swiper-button-prev, .swiper-button-next { 
+      width: 35px; 
+      height: 35px;
+      transform: translateY(-50%); 
+    }
 		.swiper-button-prev::after, .swiper-button-next::after { font-size: 1rem; }
 		.swiper-button-prev { left: 5px; }
 		.swiper-button-next { right: 5px; }
@@ -996,4 +1037,28 @@ if (apiKey) {
     }
 		.map-container iframe { height: 250px; }
 	}
+
+  @media (max-width: 480px) { /* Extra small phones */
+    .swiper-slide {
+      width: 90%; 
+    }
+    .vitrine-image {
+      height: 140px;
+    }
+    .vitrine-content {
+      padding: 0.8rem;
+    }
+    .vitrine-content h3 {
+      font-size: 0.95rem;
+    }
+    .vitrine-content p {
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    .vitrine-link {
+      /* Inherits display: block, box-sizing: border-box, width: 100%, text-align: center from 640px breakpoint */
+      padding: 0.6rem 0.8rem; /* Adjusted padding for very small screens */
+      font-size: 0.85rem;
+    }
+  }
 </style>
